@@ -1,6 +1,6 @@
 import React from "react";
 
-const Video = ({ src = "/video1.mp4" }) => {
+const Video = ({ src = "/video.mp4" }) => {
   return (
     <div className="h-full w-full">
       <video

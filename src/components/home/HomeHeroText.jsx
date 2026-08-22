@@ -2,20 +2,20 @@ import React from 'react'
 
 const HomeHeroText = () => {
     return (
-        <div className='font-[font1] mt-72 lg:mt-0 pt-30 text-center'>
+        <div className='font-[font1] mt-42 lg:mt-0 pt-30 text-center'>
 
             <div className='lg:text-[9.5vw] text-[12vw] justify-center flex items-center uppercase lg:leading-[8vw] leading-[10vw]'>
-                Energy
+                Engineering
             </div>
 
             <div className='lg:text-[9.5vw] text-[12vw] justify-center flex items-start uppercase lg:leading-[8vw] leading-[10vw]'>
 
-                Auto
+             
 
                 {/* Video between Auto and Mation */}
                 <div className='h-[7vw] w-[16vw] rounded-full mt-1 overflow-hidden'>
                     <video
-                        src="/video.mp4"
+                        src="/video1.mp4"
                         autoPlay
                         muted
                         loop
@@ -25,12 +25,12 @@ const HomeHeroText = () => {
                     />
                 </div>
 
-                Mation
+               Solar
 
             </div>
 
             <div className='lg:text-[9.5vw] text-[12vw] justify-center flex items-center uppercase lg:leading-[8vw] leading-[10vw]'>
-                Solar
+                Automation
             </div>
 
         </div>
