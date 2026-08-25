@@ -45,7 +45,7 @@ const HomeBottomText = () => {
       '>
         <Link
           className='text-[15px] sm:text-base lg:text-[5vw] lg:mt-0'
-          to='/agence'
+          to='/about'
         >
           About
         </Link>

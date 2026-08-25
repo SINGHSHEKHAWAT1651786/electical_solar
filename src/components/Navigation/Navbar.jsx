@@ -10,9 +10,9 @@ const Navbar = () => {
     const [navColor, setNavColor] = useContext(NavbarColorContext)
 
     return (
-        <div className="z-40 flex fixed top-0 w-full items-start justify-between">
+        <div className="z-40 fixed top-0 flex w-full items-start justify-between">
 
-            {/* ================= LOGO ================= */}
+            {/* LOGO  */}
             <div className="lg:p-5 p-2">
                 <div className="lg:h-30 w-36">
                     <img
@@ -24,7 +24,7 @@ const Navbar = () => {
             </div>
 
 
-            {/* ================= MENU BUTTON ================= */}
+            {/*  MENU BUTTON  */}
             <div
                 onClick={() => {
                     setNavOpen(true)
