@@ -5,10 +5,6 @@ import { useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { Link } from 'react-router-dom'
 
-// =========================================================
-// PAGE 1 LOCAL IMAGES
-// =========================================================
-
 import image1 from '../assets/images/image1.jpg'
 import image2 from '../assets/images/image2.jpg'
 import image3 from '../assets/images/image3.jpg'
@@ -17,18 +13,16 @@ import image5 from '../assets/images/image5.jpg'
 import image6 from '../assets/images/image6.jpg'
 import image7 from '../assets/images/image7.jpg'
 
+gsap.registerPlugin(ScrollTrigger)
+
 const About = () => {
-
-  gsap.registerPlugin(ScrollTrigger)
-
   // =========================================================
-  // PAGE 1 REFS
+  // PAGE 1
   // =========================================================
 
   const page1Ref = useRef(null)
 
   const page1ImageContainerRef = useRef(null)
-
   const page1Image1Ref = useRef(null)
   const page1Image2Ref = useRef(null)
 
@@ -36,7 +30,7 @@ const About = () => {
   const page1CurrentIndexRef = useRef(0)
 
   // =========================================================
-  // PAGE 2 REFS
+  // PAGE 2
   // =========================================================
 
   const page2Ref = useRef(null)
@@ -64,11 +58,10 @@ const About = () => {
   ]
 
   // =========================================================
-  // PAGE 2 / TEAM IMAGES
+  // TEAM IMAGES
   // =========================================================
 
   const teamImages = {
-
     carl:
       'https://k72.ca/uploads/teamMembers/Carl_480x640-480x640.jpg',
 
@@ -110,119 +103,153 @@ const About = () => {
 
     joel:
       'https://k72.ca/uploads/teamMembers/joel_480X640_3-480x640.jpg',
-
   }
 
   // =========================================================
-  // PAGE 1 IMAGE PRELOAD
+  // PRELOAD PAGE 1 IMAGES
   // =========================================================
 
   useGSAP(() => {
-
     page1Images.forEach((src) => {
-
       const img = new Image()
-
       img.src = src
-
     })
-
   }, [])
 
   // =========================================================
-  // PAGE 1 SCROLL IMAGE SYSTEM
+  // PAGE 1 IMAGE SYSTEM
+  //
+  // ARCHITECTURE
+  //
+  // PAGE 1
+  // │
+  // ├── white background        z-0
+  // │
+  // ├── image wrapper           z-10
+  // │       └── GSAP PIN
+  // │
+  // └── text                    z-20
+  //
+  // IMPORTANT:
+  //
+  // NO position: fixed
+  // NO createPortal for PAGE 1 image
+  //
+  // The image belongs to Page 1.
+  // GSAP pins it during Page 1 scrolling.
   // =========================================================
 
   useGSAP(() => {
-
     const page1 = page1Ref.current
-    const image1Element = page1Image1Ref.current
-    const image2Element = page1Image2Ref.current
+    const imageContainer = page1ImageContainerRef.current
+    const imageA = page1Image1Ref.current
+    const imageB = page1Image2Ref.current
 
     if (
       !page1 ||
-      !image1Element ||
-      !image2Element
+      !imageContainer ||
+      !imageA ||
+      !imageB
     ) {
       return
     }
 
     // -------------------------------------------------------
-    // INITIAL STATE
+    // INITIAL IMAGES
     // -------------------------------------------------------
 
-    image1Element.src = page1Images[0]
-    image2Element.src = page1Images[1]
-
-    gsap.set(image1Element, {
-      opacity: 1,
-      scale: 1,
-    })
-
-    gsap.set(image2Element, {
-      opacity: 0,
-      scale: 1.04,
-    })
+    imageA.src = page1Images[0]
+    imageB.src = page1Images[1]
 
     page1ActiveImageRef.current = 0
     page1CurrentIndexRef.current = 0
 
     // -------------------------------------------------------
-    // IMAGE TRANSITION FUNCTION
+    // INITIAL IMAGE STATE
     // -------------------------------------------------------
 
+    gsap.set(imageContainer, {
+      opacity: 1,
+      visibility: 'visible',
+    })
+
+    gsap.set(imageA, {
+      opacity: 1,
+      scale: 1,
+      x: 0,
+      y: 0,
+    })
+
+    gsap.set(imageB, {
+      opacity: 0,
+      scale: 1.05,
+      x: 0,
+      y: 0,
+    })
+
+    // =======================================================
+    // IMAGE CHANGE
+    // =======================================================
+
     const changeImage = (nextIndex) => {
-
-      const currentIndex =
-        page1CurrentIndexRef.current
-
-      if (nextIndex === currentIndex) {
+      if (
+        nextIndex === page1CurrentIndexRef.current ||
+        nextIndex < 0 ||
+        nextIndex >= page1Images.length
+      ) {
         return
       }
 
       const currentImage =
         page1ActiveImageRef.current === 0
-          ? image1Element
-          : image2Element
+          ? imageA
+          : imageB
 
       const nextImage =
         page1ActiveImageRef.current === 0
-          ? image2Element
-          : image1Element
+          ? imageB
+          : imageA
 
-      nextImage.src =
-        page1Images[nextIndex]
+      nextImage.src = page1Images[nextIndex]
 
       gsap.killTweensOf([
         currentImage,
         nextImage,
       ])
 
+      // -----------------------------------------------------
+      // NEXT IMAGE START
+      // -----------------------------------------------------
+
       gsap.set(nextImage, {
         opacity: 0,
-        scale: 1.05,
+        scale: 1.08,
+        x: 0,
+        y: 0,
       })
+
+      // -----------------------------------------------------
+      // CURRENT IMAGE OUT
+      // -----------------------------------------------------
 
       gsap.to(currentImage, {
-
         opacity: 0,
         scale: 0.98,
-
-        duration: 0.45,
-
+        duration: 0.35,
         ease: 'power2.out',
-
+        overwrite: true,
       })
 
-      gsap.to(nextImage, {
+      // -----------------------------------------------------
+      // NEXT IMAGE IN
+      // -----------------------------------------------------
 
+      gsap.to(nextImage, {
         opacity: 1,
         scale: 1,
-
-        duration: 0.65,
-
+        duration: 0.55,
         ease: 'power3.out',
-
+        overwrite: true,
       })
 
       page1ActiveImageRef.current =
@@ -230,76 +257,131 @@ const About = () => {
           ? 1
           : 0
 
-      page1CurrentIndexRef.current =
-        nextIndex
-
+      page1CurrentIndexRef.current = nextIndex
     }
 
     // =======================================================
-    // SCROLLTRIGGER
+    // GSAP PIN
+    //
+    // This is the important part.
+    //
+    // The image is NOT fixed.
+    //
+    // GSAP pins this element while Page 1 scrolls.
     // =======================================================
 
     const trigger = ScrollTrigger.create({
-
       trigger: page1,
+
+      pin: imageContainer,
 
       start: 'top top',
 
       end: 'bottom bottom',
 
-      scrub: true,
+      pinSpacing: false,
+
+      anticipatePin: 1,
 
       invalidateOnRefresh: true,
 
       onUpdate: (self) => {
-
         const progress = self.progress
 
-        const maxIndex =
-          page1Images.length - 1
-
-        const nextIndex = Math.min(
-          maxIndex,
+        const index = Math.min(
+          page1Images.length - 1,
           Math.floor(
-            progress * (maxIndex + 0.999)
+            progress * page1Images.length
           )
         )
 
-        changeImage(nextIndex)
-
+        changeImage(index)
       },
 
+      // -----------------------------------------------------
+      // PAGE 1 ENTER
+      // -----------------------------------------------------
+
+      onEnter: () => {
+        gsap.to(imageContainer, {
+          opacity: 1,
+          duration: 0.25,
+          overwrite: true,
+        })
+      },
+
+      // -----------------------------------------------------
+      // ENTER PAGE 1 FROM BELOW
+      // -----------------------------------------------------
+
+      onEnterBack: () => {
+        gsap.to(imageContainer, {
+          opacity: 1,
+          duration: 0.25,
+          overwrite: true,
+        })
+      },
+
+      // -----------------------------------------------------
+      // LEAVE PAGE 1
+      // -----------------------------------------------------
+
+      onLeave: () => {
+        gsap.to(imageContainer, {
+          opacity: 0,
+          duration: 0.35,
+          ease: 'power2.out',
+          overwrite: true,
+        })
+      },
+
+      // -----------------------------------------------------
+      // BACK INTO PAGE 1
+      // -----------------------------------------------------
+
+      onLeaveBack: () => {
+        gsap.to(imageContainer, {
+          opacity: 1,
+          duration: 0.3,
+          overwrite: true,
+        })
+      },
     })
+
+    // -------------------------------------------------------
+    // REFRESH AFTER LAYOUT
+    // -------------------------------------------------------
 
     requestAnimationFrame(() => {
       ScrollTrigger.refresh()
     })
 
-    return () => {
+    // -------------------------------------------------------
+    // CLEANUP
+    // -------------------------------------------------------
 
+    return () => {
       trigger.kill()
 
+      gsap.killTweensOf([
+        imageContainer,
+        imageA,
+        imageB,
+      ])
     }
-
   }, [])
 
   // =========================================================
-  // PAGE 2 IMAGE INITIAL SETUP
+  // PAGE 2 IMAGE INITIALIZATION
   // =========================================================
 
   useGSAP(() => {
+    if (!page2ImageContainerRef.current) return
 
-    if (page2ImageContainerRef.current) {
-
-      gsap.set(
-        page2ImageContainerRef.current,
-        {
-          autoAlpha: 0,
-        }
-      )
-
-    }
-
+    gsap.set(page2ImageContainerRef.current, {
+      autoAlpha: 0,
+      scale: 0.92,
+    })
   }, [])
 
   // =========================================================
@@ -307,91 +389,76 @@ const About = () => {
   // =========================================================
 
   const teamMembers = [
-
     {
       name: 'CARL GODBOUT',
       designation: 'Engineering & Automation',
       image: teamImages.carl,
     },
-
     {
       name: 'CAMILLE BRIÈRE',
       designation: 'Solar Solutions',
       image: teamImages.camille,
     },
-
     {
       name: 'OLIVIER DUCLOS',
       designation: 'Electrical Engineering',
       image: teamImages.olivier,
     },
-
     {
       name: 'LAWRENCE MARTIN',
       designation: 'Industrial Automation',
       image: teamImages.lawrence,
     },
-
     {
       name: 'HUGO JOSEPH',
       designation: 'Project Engineering',
       image: teamImages.hugo,
     },
-
     {
       name: 'CHANTAL G.',
       designation: 'Solar Installation',
       image: teamImages.chantal,
     },
-
     {
       name: 'MYLÈNE S.',
       designation: 'Electrical Solutions',
       image: teamImages.mylene,
     },
-
     {
       name: 'SOPHIE A.',
       designation: 'Building Wiring',
       image: teamImages.sophie,
     },
-
     {
       name: 'CLAIRE L.',
       designation: 'Control Panel',
       image: teamImages.claire,
     },
-
     {
       name: 'MICHÈLE RIENDEAU',
       designation: 'Maintenance & AMC',
       image: teamImages.michele,
     },
-
     {
       name: 'MEL',
       designation: 'PLC & SCADA',
       image: teamImages.mel,
     },
-
     {
       name: 'MAXIME',
       designation: 'Industrial Electrical',
       image: teamImages.maxime,
     },
-
     {
       name: 'MEGGIE',
       designation: 'Solar Engineering',
       image: teamImages.meggie,
     },
-
     {
       name: 'JOËL',
       designation: 'Engineering Projects',
       image: teamImages.joel,
     },
-
   ]
 
   // =========================================================
@@ -399,15 +466,10 @@ const About = () => {
   // =========================================================
 
   useGSAP(() => {
-
     teamMembers.forEach((member) => {
-
       const img = new Image()
-
       img.src = member.image
-
     })
-
   }, [])
 
   // =========================================================
@@ -415,33 +477,26 @@ const About = () => {
   // =========================================================
 
   const showTeamImage = (index) => {
-
     const container =
       page2ImageContainerRef.current
 
-    const image1Element =
+    const imageA =
       page2Image1Ref.current
 
-    const image2Element =
+    const imageB =
       page2Image2Ref.current
 
-    if (
-      !container ||
-      !image1Element ||
-      !image2Element
-    ) {
-      return
-    }
+    if (!container || !imageA || !imageB) return
 
     const currentImage =
       activeImageRef.current === 0
-        ? image1Element
-        : image2Element
+        ? imageA
+        : imageB
 
     const nextImage =
       activeImageRef.current === 0
-        ? image2Element
-        : image1Element
+        ? imageB
+        : imageA
 
     nextImage.src =
       teamMembers[index].image
@@ -452,12 +507,11 @@ const About = () => {
       nextImage,
     ])
 
-    // =======================================================
+    // -------------------------------------------------------
     // FIRST HOVER
-    // =======================================================
+    // -------------------------------------------------------
 
     if (activePerson === null) {
-
       gsap.set(container, {
         autoAlpha: 1,
         scale: 0.88,
@@ -486,14 +540,10 @@ const About = () => {
         duration: 0.8,
         ease: 'power4.out',
       })
-
-    }
-
-    // =======================================================
-    // CHANGE IMAGE
-    // =======================================================
-
-    else {
+    } else {
+      // -----------------------------------------------------
+      // CHANGE TEAM IMAGE
+      // -----------------------------------------------------
 
       gsap.set(nextImage, {
         opacity: 0,
@@ -522,7 +572,6 @@ const About = () => {
         duration: 0.8,
         ease: 'power4.out',
       })
-
     }
 
     activeImageRef.current =
@@ -531,7 +580,6 @@ const About = () => {
         : 0
 
     setActivePerson(index)
-
   }
 
   // =========================================================
@@ -539,7 +587,6 @@ const About = () => {
   // =========================================================
 
   const hideTeamImage = () => {
-
     const container =
       page2ImageContainerRef.current
 
@@ -548,172 +595,220 @@ const About = () => {
     gsap.killTweensOf(container)
 
     gsap.to(container, {
-
       autoAlpha: 0,
       scale: 0.92,
-
       duration: 0.3,
-
       ease: 'power3.out',
-
     })
 
     setActivePerson(null)
-
   }
 
-
+  // =========================================================
   // JSX
-  
-  return (
+  // =========================================================
 
-    <div className='parent'>
+  return (
+    <div className="parent w-full">
 
       {/* =====================================================
+          =====================================================
           PAGE 1
-      ===================================================== */}
+          =====================================================
+          ===================================================== */}
 
       <div
         ref={page1Ref}
-        id='page1'
-        className='
+        id="page1"
+        className="
           relative
-          py-1
           min-h-[180vh]
-        '
+          text-black
+          overflow-visible
+        "
       >
 
-        {/* =================================================
-            PAGE 1 IMAGE SYSTEM
-        ================================================= */}
+        {/* ===================================================
+            WHITE BACKGROUND
+
+            z-0
+        =================================================== */}
 
         <div
-          className='
+          className="
             absolute
-            inset-x-0
-            top-0
-            h-full
+            inset-0
+            z-0
+            bg-white
             pointer-events-none
-          '
+          "
+        />
+
+        {/* ===================================================
+            PAGE 1 IMAGE
+
+            z-10
+
+            IMPORTANT:
+
+            This is INSIDE page1.
+
+            It is NOT fixed.
+
+            GSAP pins this element.
+
+            Therefore:
+            - it stays in viewport
+            - text scrolls
+            - image does not scroll with text
+            - white background stays behind it
+            - text stays above it
+        =================================================== */}
+
+        <div
+          ref={page1ImageContainerRef}
+          className="
+            absolute
+            z-[10]
+
+            overflow-hidden
+
+            rounded-xl
+            lg:rounded-3xl
+
+            pointer-events-none
+
+            left-[8vw]
+            top-[50vh]
+
+            -translate-y-1/2
+
+            w-[35vw]
+            h-[25vw]
+
+            lg:left-[7vw]
+            lg:w-[25vw]
+            lg:h-[30vw]
+          "
         >
 
-          {/* STICKY IMAGE */}
+          {/* IMAGE A */}
 
-          <div
-            ref={page1ImageContainerRef}
-            className='
-              sticky
-              top-[65%]
-              
-              top-1/2
-              -translate-y-1/2
-              lg:-translate-x-[-14vw]
-              overflow-hidden
-              lg:h-[30vw]
-              h-[20vw]
-              lg:w-[25vw]
-              w-[35vw]
-              lg:rounded-3xl
-              rounded-xl
-              will-change-transform
-            '
-          >
+          <img
+            ref={page1Image1Ref}
+            src={page1Images[0]}
+            alt=""
+            draggable="false"
+            className="
+              absolute
+              inset-0
+              w-full
+              h-full
+              object-cover
+              block
+            "
+          />
 
-            {/* IMAGE 1 */}
+          {/* IMAGE B */}
 
-            <img
-              ref={page1Image1Ref}
-              src={page1Images[0]}
-              alt='Innovex Automation'
-              className='
-                absolute
-                inset-0
-                h-full
-                w-full
-                object-cover
-                will-change-transform
-              '
-            />
-
-            {/* IMAGE 2 */}
-
-            <img
-              ref={page1Image2Ref}
-              src={page1Images[1]}
-              alt='Innovex Automation'
-              className='
-                absolute
-                inset-0
-                h-full
-                w-full
-                object-cover
-                will-change-transform
-              '
-            />
-
-          </div>
+          <img
+            ref={page1Image2Ref}
+            src={page1Images[1]}
+            alt=""
+            draggable="false"
+            className="
+              absolute
+              inset-0
+              w-full
+              h-full
+              object-cover
+              block
+            "
+          />
 
         </div>
 
+        {/* ===================================================
+            PAGE 1 TEXT
 
-        {/* =================================================
-            PAGE 1 CONTENT
-        ================================================= */}
+            z-20
+
+            ABOVE IMAGE
+        =================================================== */}
 
         <div
-          className='
+          className="
             relative
-            z-10
+            z-[20]
             font-[font2]
-          '
+          "
         >
 
-          {/* TITLE */}
+          {/* =================================================
+              TITLE
+          ================================================= */}
 
           <div
-            className='
-              lg:mt-[65vh]
-              mt-[35vh]
-            '
+            className="
+              relative
+              z-[20]
+
+              lg:pt-[65vh]
+              pt-[35vh]
+            "
           >
 
             <h1
-              className='
+              className="
+                relative
+                z-[20]
+
                 text-[14vw]
                 text-center
                 uppercase
                 leading-[18vw]
-              '
-            >
 
+                bg-transparent
+              "
+            >
               INNOVEX
               <br />
-
               AUTOMATION
-
             </h1>
 
           </div>
 
-
-          {/* DESCRIPTION */}
+          {/* =================================================
+              DESCRIPTION
+          ================================================= */}
 
           <div
-            className='
+            className="
+              relative
+              z-[20]
+
               lg:pl-[40%]
               lg:mt-20
               mt-4
+
               p-3
               pb-[70vh]
-            '
+
+              bg-transparent
+            "
           >
 
             <p
-              className='
+              className="
+                relative
+                z-[20]
+
                 lg:text-6xl
                 text-xl
                 leading-tight
-              '
+
+                bg-transparent
+              "
             >
 
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -721,19 +816,19 @@ const About = () => {
               Innovex Automation (IA) is a leading engineering
               company in Rajasthan, we specializing in{' '}
 
-              <span className='bg-sky-300 px-2 py-1'>
+              <span className="bg-sky-300 px-2 py-1">
                 Industrial Automation
               </span>
 
               ,{' '}
 
-              <span className='bg-sky-300 px-2 py-1'>
+              <span className="bg-sky-300 px-2 py-1">
                 Electrical Solutions
               </span>
 
               ,{' '}
 
-              <span className='bg-sky-300 px-2 py-1'>
+              <span className="bg-sky-300 px-2 py-1">
                 Solar Energy
               </span>
 
@@ -741,19 +836,19 @@ const About = () => {
 
               Based in{' '}
 
-              <span className='bg-gray-300 px-2 py-1'>
+              <span className="bg-gray-300 px-2 py-1">
                 Sikar
               </span>
 
               , with branches in{' '}
 
-              <span className='bg-gray-300 px-2 py-1'>
+              <span className="bg-gray-300 px-2 py-1">
                 Churu
               </span>
 
               and{' '}
 
-              <span className='bg-gray-300 px-2 py-1'>
+              <span className="bg-gray-300 px-2 py-1">
                 Fatehpur
               </span>
 
@@ -769,195 +864,181 @@ const About = () => {
 
       </div>
 
-
       {/* =====================================================
+          =====================================================
           PAGE 2
-      ===================================================== */}
+          =====================================================
+          ===================================================== */}
 
       <div
         ref={page2Ref}
-        id='page2'
-        className='
+        id="page2"
+        className="
           relative
+          z-30
           min-h-[400vh]
           bg-white
           text-black
           font-[font2]
-        '
+        "
       >
 
-        {/* =================================================
-            OUR EXPERIENCE
-        ================================================= */}
+        {/* ===================================================
+            EXPERIENCE
+        =================================================== */}
 
         <section
-          className='
+          className="
             pt-[18vh]
             pb-[18vh]
             px-5
             lg:px-10
-          '
+          "
         >
 
           <div
-            className='
+            className="
               flex
               flex-col
               lg:flex-row
               justify-between
               gap-12
-            '
+            "
           >
 
-            <div className='lg:w-[48%]'>
+            <div className="lg:w-[48%]">
 
               <p
-                className='
+                className="
                   text-sm
                   lg:text-lg
                   uppercase
                   tracking-wider
                   mb-8
-                '
+                "
               >
                 Our Experience
               </p>
 
               <h2
-                className='
+                className="
                   text-[13vw]
                   lg:text-[8vw]
                   uppercase
                   leading-[0.82]
-                '
+                "
               >
-
                 BUILT
                 <br />
-
                 BY
                 <br />
-
                 EXPERIENCE
-
               </h2>
 
             </div>
 
-
             <div
-              className='
+              className="
                 lg:w-[42%]
                 lg:pt-[12vh]
-              '
+              "
             >
 
               <p
-                className='
+                className="
                   text-xl
                   lg:text-4xl
                   leading-tight
-                '
+                "
               >
-
                 Engineering solutions built through{' '}
 
                 <span
-                  className='
+                  className="
                     bg-sky-300
                     px-2
                     py-1
                     mx-1
-                  '
+                  "
                 >
                   practical experience
                 </span>
 
                 , technical expertise and a deep understanding
                 of real-world industrial requirements.
-
               </p>
 
-
               <p
-                className='
+                className="
                   text-base
                   lg:text-xl
                   leading-relaxed
                   mt-10
                   text-black/60
-                '
+                "
               >
-
                 From automation and control systems to electrical
                 infrastructure and solar energy, Innovex Automation
                 works across the complete project lifecycle —
                 from design and installation to commissioning,
                 maintenance and technical support.
-
               </p>
 
             </div>
 
           </div>
 
-
           {/* =================================================
-              EXPERIENCE NUMBERS
+              NUMBERS
           ================================================= */}
 
           <div
-            className='
+            className="
               grid
               grid-cols-2
               lg:grid-cols-4
               mt-[15vh]
               border-t
               border-black
-            '
+            "
           >
 
-            {/* 10+ */}
-
             <div
-              className='
+              className="
                 py-10
                 lg:py-14
                 border-b
                 lg:border-b-0
                 lg:border-r
                 border-black/20
-              '
+              "
             >
 
               <div
-                className='
+                className="
                   text-[15vw]
                   lg:text-[7vw]
                   leading-none
-                '
+                "
               >
                 10+
               </div>
 
               <p
-                className='
+                className="
                   text-sm
                   lg:text-lg
                   uppercase
                   mt-5
-                '
+                "
               >
                 Years Experience
               </p>
 
             </div>
 
-
-            {/* 100+ */}
-
             <div
-              className='
+              className="
                 py-10
                 lg:py-14
                 border-b
@@ -965,37 +1046,34 @@ const About = () => {
                 lg:border-r
                 border-black/20
                 lg:pl-8
-              '
+              "
             >
 
               <div
-                className='
+                className="
                   text-[15vw]
                   lg:text-[7vw]
                   leading-none
-                '
+                "
               >
                 100+
               </div>
 
               <p
-                className='
+                className="
                   text-sm
                   lg:text-lg
                   uppercase
                   mt-5
-                '
+                "
               >
                 Projects Delivered
               </p>
 
             </div>
 
-
-            {/* 3 */}
-
             <div
-              className='
+              className="
                 py-10
                 lg:py-14
                 border-b
@@ -1003,60 +1081,57 @@ const About = () => {
                 lg:border-r
                 border-black/20
                 lg:pl-8
-              '
+              "
             >
 
               <div
-                className='
+                className="
                   text-[15vw]
                   lg:text-[7vw]
                   leading-none
-                '
+                "
               >
                 3
               </div>
 
               <p
-                className='
+                className="
                   text-sm
                   lg:text-lg
                   uppercase
                   mt-5
-                '
+                "
               >
                 Locations
               </p>
 
             </div>
 
-
-            {/* 24/7 */}
-
             <div
-              className='
+              className="
                 py-10
                 lg:py-14
                 lg:pl-8
-              '
+              "
             >
 
               <div
-                className='
+                className="
                   text-[15vw]
                   lg:text-[7vw]
                   leading-none
-                '
+                "
               >
                 24/7
               </div>
 
               <p
-                className='
+                className="
                   text-sm
                   lg:text-lg
                   uppercase
                   mt-5
-                '
+                "
               >
                 Technical Support
               </p>
@@ -1067,68 +1142,65 @@ const About = () => {
 
         </section>
 
-
-        {/* =================================================
+        {/* ===================================================
             ENGINEERING STATEMENT
-        ================================================= */}
+        =================================================== */}
 
         <section
-          className='
+          className="
             px-5
             lg:px-10
             pb-[18vh]
-          '
+          "
         >
 
           <div
-            className='
+            className="
               border-t
               border-black
               pt-8
-            '
+            "
           >
 
             <div
-              className='
+              className="
                 flex
                 flex-col
                 lg:flex-row
                 justify-between
                 gap-10
-              '
+              "
             >
 
               <p
-                className='
+                className="
                   text-sm
                   uppercase
                   lg:w-[25%]
-                '
+                "
               >
                 What We Do
               </p>
 
               <p
-                className='
+                className="
                   text-3xl
                   lg:text-[5vw]
                   leading-[0.95]
                   lg:w-[70%]
-                '
+                "
               >
-
                 WE TURN ENGINEERING
                 <br />
-
                 CHALLENGES INTO
                 <br />
 
                 <span
-                  className='
+                  className="
                     bg-black
                     text-white
                     px-2
-                  '
+                  "
                 >
                   WORKING SOLUTIONS.
                 </span>
@@ -1141,52 +1213,47 @@ const About = () => {
 
         </section>
 
-
-        {/* =================================================
+        {/* ===================================================
             OUR TEAM
-        ================================================= */}
+        =================================================== */}
 
         <div
-          className='
+          className="
             pt-[8vh]
             pb-[15vh]
             px-5
             lg:px-10
-          '
+          "
         >
 
           <h2
-            className='
+            className="
               text-[11vw]
               lg:text-[8vw]
               uppercase
               leading-none
-            '
+            "
           >
             OUR TEAM
           </h2>
 
         </div>
 
-
-        {/* =================================================
+        {/* ===================================================
             TEAM LIST
-        ================================================= */}
+        =================================================== */}
 
-        <div className='relative z-20'>
+        <div className="relative z-20">
 
           {teamMembers.map((member, index) => (
 
             <div
               key={member.name}
-
               onMouseEnter={() =>
                 showTeamImage(index)
               }
-
               onMouseLeave={hideTeamImage}
-
-              className='
+              className="
                 group
                 relative
                 w-full
@@ -1198,13 +1265,11 @@ const About = () => {
                 border-black/20
                 cursor-pointer
                 overflow-hidden
-              '
+              "
             >
 
-              {/* BLACK HOVER */}
-
               <div
-                className='
+                className="
                   absolute
                   inset-0
                   bg-black
@@ -1213,14 +1278,11 @@ const About = () => {
                   transition-transform
                   duration-700
                   ease-[cubic-bezier(0.22,1,0.36,1)]
-                '
+                "
               />
 
-
-              {/* DESIGNATION */}
-
               <div
-                className='
+                className="
                   relative
                   z-10
                   w-[35%]
@@ -1231,18 +1293,13 @@ const About = () => {
                   group-hover:text-white
                   transition-colors
                   duration-500
-                '
+                "
               >
-
                 {member.designation}
-
               </div>
 
-
-              {/* NAME */}
-
               <div
-                className='
+                className="
                   relative
                   z-10
                   w-[65%]
@@ -1257,11 +1314,9 @@ const About = () => {
                   group-hover:text-white
                   transition-colors
                   duration-500
-                '
+                "
               >
-
                 {member.name}
-
               </div>
 
             </div>
@@ -1270,21 +1325,18 @@ const About = () => {
 
         </div>
 
+        {/* ===================================================
+            SPACE
+        =================================================== */}
 
-        {/* =================================================
-            SPACE BEFORE FOOTER
-        ================================================= */}
+        <div className="h-[35vh]" />
 
-        <div className='h-[35vh]' />
-
-
-        {/* =================================================
-            COPYRIGHT + CONTACT
-            BOTTOM RIGHT
-        ================================================= */}
+        {/* ===================================================
+            FOOTER
+        =================================================== */}
 
         <div
-          className='
+          className="
             font-[font2]
             flex
             items-center
@@ -1293,15 +1345,11 @@ const About = () => {
             sm:gap-2
             px-2
             pb-8
-          '
+          "
         >
 
-          {/* =================================================
-              COPYRIGHT
-          ================================================= */}
-
           <div
-            className='
+            className="
               border
               border-black
               text-black
@@ -1309,10 +1357,6 @@ const About = () => {
               sm:h-12
               flex
               items-center
-               left-1/2
-      bottom-8
-      -translate-x-3/4
-    justify-center
               pt-1
               px-3
               sm:px-4
@@ -1321,30 +1365,23 @@ const About = () => {
               uppercase
               transition-all
               duration-300
-            '
+            "
           >
 
             <span
-              className='
+              className="
                 text-[12px]
                 sm:text-sm
                 lg:text-base
-                
-              '
+              "
             >
               © {new Date().getFullYear()} Innovex Automation
             </span>
 
           </div>
 
-
-          {/* =================================================
-              CONTACT
-              SAME STYLE AS PROJECTS / ABOUT
-          ================================================= */}
-
           <div
-            className='
+            className="
               border
               border-black
               hover:border-black
@@ -1354,7 +1391,6 @@ const About = () => {
               sm:h-12
               lg:h-20
               flex
-              
               items-center
               pt-1
               px-3
@@ -1364,17 +1400,16 @@ const About = () => {
               uppercase
               transition-all
               duration-300
-            '
+            "
           >
 
             <Link
-              className='
+              className="
                 text-[15px]
                 sm:text-base
                 lg:text-[5vw]
-                lg:mt-0
-              '
-              to='/contact'
+              "
+              to="/contact"
             >
               Contact
             </Link>
@@ -1385,9 +1420,9 @@ const About = () => {
 
       </div>
 
-
       {/* =====================================================
-          PAGE 2 IMAGE PORTAL
+          PAGE 2 TEAM IMAGE
+          ORIGINAL SYSTEM PRESERVED
       ===================================================== */}
 
       {typeof document !== 'undefined' &&
@@ -1395,12 +1430,12 @@ const About = () => {
 
           <div
             ref={page2ImageContainerRef}
-            className='
+            className="
               fixed
               inset-0
               z-[50]
               pointer-events-none
-            '
+            "
             style={{
               opacity: 0,
               visibility: 'hidden',
@@ -1408,7 +1443,7 @@ const About = () => {
           >
 
             <div
-              className='
+              className="
                 absolute
                 left-1/2
                 top-1/2
@@ -1423,33 +1458,33 @@ const About = () => {
                 max-h-[480px]
                 lg:w-[25vw]
                 lg:h-[34vw]
-              '
+              "
             >
 
               <img
                 ref={page2Image1Ref}
                 src={teamImages.carl}
-                alt=''
-                className='
+                alt=""
+                className="
                   absolute
                   inset-0
                   h-full
                   w-full
                   object-cover
-                '
+                "
               />
 
               <img
                 ref={page2Image2Ref}
                 src={teamImages.carl}
-                alt=''
-                className='
+                alt=""
+                className="
                   absolute
                   inset-0
                   h-full
                   w-full
                   object-cover
-                '
+                "
               />
 
             </div>
@@ -1457,13 +1492,10 @@ const About = () => {
           </div>,
 
           document.body
-
         )}
 
     </div>
-
   )
-
 }
 
 export default About

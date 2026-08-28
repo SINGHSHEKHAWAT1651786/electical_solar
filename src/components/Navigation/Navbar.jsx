@@ -10,7 +10,7 @@ const Navbar = () => {
     const [navColor, setNavColor] = useContext(NavbarColorContext)
 
     return (
-        <div className="z-40 fixed top-0 flex w-full items-start justify-between">
+        <div className="z-40 flex fixed top-0 w-full items-start justify-between">
 
             {/* LOGO  */}
             <div className="lg:p-5 p-2">
