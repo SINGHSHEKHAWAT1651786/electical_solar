@@ -11,6 +11,7 @@ const Projects = () => {
   const [activeProject, setActiveProject] = useState(null)
 
   const pageRef = useRef(null)
+  const projectsRef = useRef(null)
   const partnersRef = useRef(null)
   const contactRef = useRef(null)
 
@@ -77,207 +78,280 @@ const Projects = () => {
     },
   ]
 
-  const partners = ['TATA POWER', 'ADANI', 'LUMINOUS', 'WAAREE']
+  const partners = [
+    'TATA POWER',
+    'ADANI',
+    'LUMINOUS',
+    'WAAREE',
+  ]
 
   useGSAP(
     () => {
-      // ==========================================
-      // PROJECT IMAGE / CARD SCROLL EFFECT
-      // ==========================================
+      /*
+      ============================================================
+      PROJECTS
+      ============================================================
+      */
 
-      const heroElements = gsap.utils.toArray('.hero')
+      const heroElements = gsap.utils.toArray(
+        '.project-hero',
+        projectsRef.current
+      )
 
-      heroElements.forEach((hero) => {
-        const fullHeight =
-          window.innerWidth >= 768 ? '850px' : '70vh'
+      heroElements.forEach((hero, index) => {
+        const getExpandedHeight = () => {
+          return window.innerWidth >= 768
+            ? 850
+            : window.innerHeight * 0.7
+        }
 
-        gsap.fromTo(
-          hero,
-          {
-            height: '100px',
-          },
-          {
-            height: fullHeight,
-            ease: 'none',
+        const expandedHeight = getExpandedHeight()
 
-            scrollTrigger: {
-              trigger: hero,
-
-              // Image starts expanding when it enters
-              // from the bottom of the viewport
-              start: 'top 90%',
-
-              // Image is fully expanded around center
-              end: 'top 35%',
-
-              scrub: 0.5,
-
-              invalidateOnRefresh: true,
-            },
-          }
-        )
-
-        // ------------------------------------------
-        // SHRINK WHEN PROJECT MOVES TOWARD BOTTOM
-        // ------------------------------------------
+        gsap.set(hero, {
+          height: 100,
+          transformOrigin: 'bottom center',
+          force3D: true,
+          overflow: 'hidden',
+        })
 
         gsap.fromTo(
           hero,
           {
-            height: fullHeight,
+            scaleY: 0.2,
           },
           {
-            height: '100px',
+            scaleY: 1,
+            height: expandedHeight,
             ease: 'none',
-
             scrollTrigger: {
               trigger: hero,
-
-              // Start shrinking after the project
-              // has passed through the main viewport
-              start: 'bottom 65%',
-
-              // Finish shrinking near bottom
-              end: 'bottom 10%',
-
-              scrub: 0.5,
-
+              start: `top ${92 - index * 4}%`,
+              end: `bottom ${12 + index * 4}%`,
+              scrub: 1,
               invalidateOnRefresh: true,
+              id: `project-height-${index}`,
             },
           }
         )
       })
 
-      // ==========================================
-      // PARTNERS
-      // ==========================================
+      /*
+      ============================================================
+      PARTNERS
+      ============================================================
+      */
 
-      gsap.from('.partners-label', {
-        y: 30,
-        opacity: 0,
-        duration: 0.6,
-        ease: 'power3.out',
+      const partnersLabel = partnersRef.current?.querySelector(
+        '.partners-label'
+      )
 
-        scrollTrigger: {
-          trigger: partnersRef.current,
-          start: 'top 80%',
-          toggleActions: 'play none none reverse',
+      const partnersTitle = partnersRef.current?.querySelectorAll(
+        '.partners-title span'
+      )
+
+      const partnerCards = partnersRef.current?.querySelectorAll(
+        '.partner-card'
+      )
+
+      const partnerNames = partnersRef.current?.querySelectorAll(
+        '.partner-name'
+      )
+
+      if (partnersLabel) {
+        gsap.from(partnersLabel, {
+          y: 30,
+          opacity: 0,
+          duration: 0.6,
+          ease: 'power3.out',
+
+          scrollTrigger: {
+            trigger: partnersRef.current,
+            start: 'top 80%',
+            toggleActions: 'play none none reverse',
+          },
+        })
+      }
+
+      if (partnersTitle?.length) {
+        gsap.from(partnersTitle, {
+          yPercent: 100,
+          opacity: 0,
+          duration: 0.7,
+          stagger: 0.08,
+          ease: 'power4.out',
+
+          scrollTrigger: {
+            trigger: partnersRef.current,
+            start: 'top 75%',
+            toggleActions: 'play none none reverse',
+          },
+        })
+      }
+
+      if (partnerCards?.length) {
+        gsap.from(partnerCards, {
+          y: 60,
+          opacity: 0,
+          scale: 0.96,
+          duration: 0.7,
+          stagger: 0.1,
+          ease: 'power3.out',
+
+          scrollTrigger: {
+            trigger: partnersRef.current,
+            start: 'top 82%',
+            toggleActions: 'play none none reverse',
+          },
+        })
+      }
+
+      if (partnerNames?.length) {
+        gsap.from(partnerNames, {
+          y: 20,
+          opacity: 0,
+          duration: 0.6,
+          stagger: 0.1,
+          ease: 'power3.out',
+
+          scrollTrigger: {
+            trigger: partnersRef.current,
+            start: 'top 75%',
+            toggleActions: 'play none none reverse',
+          },
+        })
+      }
+
+      /*
+      ============================================================
+      CONTACT
+      ============================================================
+      */
+
+      const contactLabel = contactRef.current?.querySelector(
+        '.contact-label'
+      )
+
+      const contactTitle = contactRef.current?.querySelectorAll(
+        '.contact-title span'
+      )
+
+      const contactItems = contactRef.current?.querySelectorAll(
+        '.contact-item'
+      )
+
+      const contactFooter = contactRef.current?.querySelector(
+        '.contact-footer'
+      )
+
+      /*
+      Contact background reveal
+      */
+
+      gsap.fromTo(
+        contactRef.current,
+        {
+          clipPath: 'inset(100% 0% 0% 0%)',
         },
+        {
+          clipPath: 'inset(0% 0% 0% 0%)',
+          duration: 0.9,
+          ease: 'power3.inOut',
+
+          scrollTrigger: {
+            trigger: contactRef.current,
+            start: 'top 90%',
+            toggleActions: 'play none none reverse',
+          },
+        }
+      )
+
+      /*
+      Contact label
+      */
+
+      if (contactLabel) {
+        gsap.from(contactLabel, {
+          y: 30,
+          opacity: 0,
+          duration: 0.5,
+          ease: 'power3.out',
+
+          scrollTrigger: {
+            trigger: contactRef.current,
+            start: 'top 75%',
+            toggleActions: 'play none none reverse',
+          },
+        })
+      }
+
+      /*
+      Contact title
+      */
+
+      if (contactTitle?.length) {
+        gsap.from(contactTitle, {
+          yPercent: 100,
+          opacity: 0,
+          duration: 0.55,
+          stagger: 0.05,
+          ease: 'power4.out',
+
+          scrollTrigger: {
+            trigger: contactRef.current,
+            start: 'top 82%',
+            toggleActions: 'play none none reverse',
+          },
+        })
+      }
+
+      /*
+      Contact items
+      */
+
+      if (contactItems?.length) {
+        gsap.from(contactItems, {
+          y: 40,
+          opacity: 0,
+          duration: 0.7,
+          stagger: 0.12,
+          ease: 'power3.out',
+
+          scrollTrigger: {
+            trigger: contactRef.current,
+            start: 'top 90%',
+            toggleActions: 'play none none reverse',
+          },
+        })
+      }
+
+      /*
+      Contact footer
+      */
+
+      if (contactFooter) {
+        gsap.from(contactFooter, {
+          y: 25,
+          opacity: 0,
+          duration: 0.6,
+          ease: 'power3.out',
+
+          scrollTrigger: {
+            trigger: contactFooter,
+            start: 'top 95%',
+            toggleActions: 'play none none reverse',
+          },
+        })
+      }
+
+      /*
+      ============================================================
+      REFRESH
+      ============================================================
+      */
+
+      requestAnimationFrame(() => {
+        ScrollTrigger.refresh()
       })
-
-      gsap.from('.partners-title span', {
-        yPercent: 100,
-        opacity: 0,
-        duration: 0.7,
-        stagger: 0.08,
-        ease: 'power4.out',
-
-        scrollTrigger: {
-          trigger: partnersRef.current,
-          start: 'top 75%',
-          toggleActions: 'play none none reverse',
-        },
-      })
-
-      gsap.from('.partner-card', {
-        y: 60,
-        opacity: 0,
-        scale: 0.96,
-        duration: 0.7,
-        stagger: 0.1,
-        ease: 'power3.out',
-
-        scrollTrigger: {
-          trigger: '.partner-grid',
-          start: 'top 82%',
-          toggleActions: 'play none none reverse',
-        },
-      })
-
-      gsap.from('.partner-name', {
-        y: 20,
-        opacity: 0,
-        duration: 0.6,
-        stagger: 0.1,
-        ease: 'power3.out',
-
-        scrollTrigger: {
-          trigger: '.partner-grid',
-          start: 'top 75%',
-          toggleActions: 'play none none reverse',
-        },
-      })
-
-      // ==========================================
-      // CONTACT
-      // ==========================================
-
-      gsap.from(contactRef.current, {
-        clipPath: 'inset(100% 0% 0% 0%)',
-        duration: 0.9,
-        ease: 'power3.inOut',
-
-        scrollTrigger: {
-          trigger: contactRef.current,
-          start: 'top 90%',
-          toggleActions: 'play none none reverse',
-        },
-      })
-
-      gsap.from('.contact-label', {
-        y: 30,
-        opacity: 0,
-        duration: 0.5,
-        ease: 'power3.out',
-
-        scrollTrigger: {
-          trigger: contactRef.current,
-          start: 'top 75%',
-          toggleActions: 'play none none reverse',
-        },
-      })
-
-      gsap.from('.contact-title span', {
-        yPercent: 100,
-        opacity: 0,
-        duration: 0.55,
-        stagger: 0.05,
-        ease: 'power4.out',
-
-        scrollTrigger: {
-          trigger: '.contact-title',
-          start: 'top 82%',
-          toggleActions: 'play none none reverse',
-        },
-      })
-
-      gsap.from('.contact-item', {
-        y: 40,
-        duration: 0.7,
-        stagger: 0.12,
-        ease: 'power3.out',
-
-        scrollTrigger: {
-          trigger: '.contact-items',
-          start: 'top 90%',
-          toggleActions: 'play none none reverse',
-        },
-      })
-
-      gsap.from('.contact-footer', {
-        y: 25,
-        opacity: 0,
-        duration: 0.6,
-        ease: 'power3.out',
-
-        scrollTrigger: {
-          trigger: '.contact-footer',
-          start: 'top 95%',
-          toggleActions: 'play none none reverse',
-        },
-      })
-
-      ScrollTrigger.refresh()
     },
     {
       scope: pageRef,
@@ -285,10 +359,13 @@ const Projects = () => {
   )
 
   return (
-    <div ref={pageRef} className="md:p-4 p-2">
-      {/* ==========================================
+    <div
+      ref={pageRef}
+      className="md:p-4 p-2"
+    >
+      {/* =========================================================
           ACTIVE PROJECT INFO
-      ========================================== */}
+      ========================================================= */}
 
       {activeProject && (
         <div className="fixed top-32 md:top-56 left-0 z-30 w-full bg-white text-black pointer-events-none">
@@ -308,9 +385,9 @@ const Projects = () => {
         </div>
       )}
 
-      {/* ==========================================
+      {/* =========================================================
           TITLE
-      ========================================== */}
+      ========================================================= */}
 
       <div className="pt-[45vh]">
         <h2 className="font-[font2] md:text-[9.5vw] text-7xl uppercase">
@@ -318,16 +395,21 @@ const Projects = () => {
         </h2>
       </div>
 
-      {/* ==========================================
+      {/* =========================================================
           PROJECTS
-      ========================================== */}
+          IMPORTANT:
+          This wrapper isolates the project ScrollTriggers.
+      ========================================================= */}
 
-      <div className="md:-mt-3 mt-0 lol">
+      <div
+        ref={projectsRef}
+        className="md:-mt-3 mt-0"
+      >
         {projects.map((elem, idx) => (
           <div
             key={idx}
             className="
-              hero
+              project-hero
               w-full
               h-[70vh]
               md:h-[850px]
@@ -349,9 +431,9 @@ const Projects = () => {
         ))}
       </div>
 
-      {/* ==========================================
+      {/* =========================================================
           PARTNERS
-      ========================================== */}
+      ========================================================= */}
 
       <section
         ref={partnersRef}
@@ -363,8 +445,12 @@ const Projects = () => {
           </p>
 
           <h3 className="partners-title font-[font2] text-[12vw] md:text-[9.5vw] leading-[0.8] uppercase overflow-hidden">
-            <span className="inline-block">Trusted</span>{' '}
-            <span className="inline-block">By</span>
+            <span className="inline-block">
+              Trusted
+            </span>{' '}
+            <span className="inline-block">
+              By
+            </span>
           </h3>
         </div>
 
@@ -434,9 +520,9 @@ const Projects = () => {
         </div>
       </section>
 
-      {/* ==========================================
+      {/* =========================================================
           CONTACT
-      ========================================== */}
+      ========================================================= */}
 
       <section
         ref={contactRef}
@@ -452,6 +538,7 @@ const Projects = () => {
         "
       >
         <div className="min-h-screen flex flex-col">
+
           <div>
             <p className="contact-label font-[font1] text-sm uppercase text-sky-400 mb-8">
               Get In Touch
@@ -468,14 +555,21 @@ const Projects = () => {
                   uppercase
                 "
               >
-                <span className="inline-block">Let's</span>
+                <span className="inline-block">
+                  Let's
+                </span>
+
                 <br />
-                <span className="inline-block">Talk</span>
+
+                <span className="inline-block">
+                  Talk
+                </span>
               </h2>
             </div>
           </div>
 
           <div className="contact-items mt-24 md:mt-32 grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-16">
+
             <div className="contact-item group">
               <p className="font-[font1] text-xs uppercase text-white/40 mb-4">
                 Email
@@ -570,6 +664,7 @@ const Projects = () => {
                 Automation / Electrical / Solar
               </p>
             </div>
+
           </div>
 
           <div className="contact-footer border-t border-white/30 mt-auto pt-6 flex flex-col md:flex-row justify-between gap-5">
@@ -591,6 +686,7 @@ const Projects = () => {
               Back To Top ↑
             </a>
           </div>
+
         </div>
       </section>
     </div>
