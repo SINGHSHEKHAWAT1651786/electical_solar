@@ -35,7 +35,6 @@ const Projects = () => {
         },
       ],
     },
-
     {
       projects: [
         {
@@ -56,7 +55,6 @@ const Projects = () => {
         },
       ],
     },
-
     {
       projects: [
         {
@@ -79,28 +77,87 @@ const Projects = () => {
     },
   ]
 
-  const partners = [
-    'TATA POWER',
-    'ADANI',
-    'LUMINOUS',
-    'WAAREE',
-  ]
-
-  /*
-  ==========================================
-  GSAP
-  ==========================================
-  */
+  const partners = ['TATA POWER', 'ADANI', 'LUMINOUS', 'WAAREE']
 
   useGSAP(
     () => {
-      /* PARTNERS LABEL */
+      // ==========================================
+      // PROJECT IMAGE / CARD SCROLL EFFECT
+      // ==========================================
+
+      const heroElements = gsap.utils.toArray('.hero')
+
+      heroElements.forEach((hero) => {
+        const fullHeight =
+          window.innerWidth >= 768 ? '850px' : '70vh'
+
+        gsap.fromTo(
+          hero,
+          {
+            height: '100px',
+          },
+          {
+            height: fullHeight,
+            ease: 'none',
+
+            scrollTrigger: {
+              trigger: hero,
+
+              // Image starts expanding when it enters
+              // from the bottom of the viewport
+              start: 'top 90%',
+
+              // Image is fully expanded around center
+              end: 'top 35%',
+
+              scrub: 0.5,
+
+              invalidateOnRefresh: true,
+            },
+          }
+        )
+
+        // ------------------------------------------
+        // SHRINK WHEN PROJECT MOVES TOWARD BOTTOM
+        // ------------------------------------------
+
+        gsap.fromTo(
+          hero,
+          {
+            height: fullHeight,
+          },
+          {
+            height: '100px',
+            ease: 'none',
+
+            scrollTrigger: {
+              trigger: hero,
+
+              // Start shrinking after the project
+              // has passed through the main viewport
+              start: 'bottom 65%',
+
+              // Finish shrinking near bottom
+              end: 'bottom 10%',
+
+              scrub: 0.5,
+
+              invalidateOnRefresh: true,
+            },
+          }
+        )
+      })
+
+      // ==========================================
+      // PARTNERS
+      // ==========================================
 
       gsap.from('.partners-label', {
         y: 30,
         opacity: 0,
         duration: 0.6,
         ease: 'power3.out',
+
         scrollTrigger: {
           trigger: partnersRef.current,
           start: 'top 80%',
@@ -108,24 +165,19 @@ const Projects = () => {
         },
       })
 
-
-      /* PARTNERS TITLE */
-
       gsap.from('.partners-title span', {
         yPercent: 100,
         opacity: 0,
         duration: 0.7,
         stagger: 0.08,
         ease: 'power4.out',
+
         scrollTrigger: {
           trigger: partnersRef.current,
           start: 'top 75%',
           toggleActions: 'play none none reverse',
         },
       })
-
-
-      /* PARTNER BOXES */
 
       gsap.from('.partner-card', {
         y: 60,
@@ -134,6 +186,7 @@ const Projects = () => {
         duration: 0.7,
         stagger: 0.1,
         ease: 'power3.out',
+
         scrollTrigger: {
           trigger: '.partner-grid',
           start: 'top 82%',
@@ -141,15 +194,13 @@ const Projects = () => {
         },
       })
 
-
-      /* PARTNER NAMES */
-
       gsap.from('.partner-name', {
         y: 20,
         opacity: 0,
         duration: 0.6,
         stagger: 0.1,
         ease: 'power3.out',
+
         scrollTrigger: {
           trigger: '.partner-grid',
           start: 'top 75%',
@@ -157,14 +208,9 @@ const Projects = () => {
         },
       })
 
-
-      /*
-      ==========================================
-      CONTACT
-      ==========================================
-      */
-
-      /* CONTACT SECTION */
+      // ==========================================
+      // CONTACT
+      // ==========================================
 
       gsap.from(contactRef.current, {
         clipPath: 'inset(100% 0% 0% 0%)',
@@ -178,9 +224,6 @@ const Projects = () => {
         },
       })
 
-
-      /* GET IN TOUCH */
-
       gsap.from('.contact-label', {
         y: 30,
         opacity: 0,
@@ -193,9 +236,6 @@ const Projects = () => {
           toggleActions: 'play none none reverse',
         },
       })
-
-
-      /* LET'S TALK */
 
       gsap.from('.contact-title span', {
         yPercent: 100,
@@ -211,18 +251,6 @@ const Projects = () => {
         },
       })
 
-
-      /*
-      ==========================================
-      CONTACT DETAILS
-
-      IMPORTANT:
-      We animate ONLY y.
-      opacity remains 1.
-      So the information can NEVER stay hidden.
-      ==========================================
-      */
-
       gsap.from('.contact-item', {
         y: 40,
         duration: 0.7,
@@ -236,9 +264,6 @@ const Projects = () => {
         },
       })
 
-
-      /* FOOTER */
-
       gsap.from('.contact-footer', {
         y: 25,
         opacity: 0,
@@ -251,25 +276,23 @@ const Projects = () => {
           toggleActions: 'play none none reverse',
         },
       })
+
+      ScrollTrigger.refresh()
     },
     {
       scope: pageRef,
     }
   )
 
-
   return (
     <div ref={pageRef} className="md:p-4 p-2">
-
-      {/* ========================================
-          PROJECT INFO BAR
-      ======================================== */}
+      {/* ==========================================
+          ACTIVE PROJECT INFO
+      ========================================== */}
 
       {activeProject && (
         <div className="fixed top-32 md:top-56 left-0 z-30 w-full bg-white text-black pointer-events-none">
-
           <div className="grid grid-cols-[1fr_auto_auto] items-center gap-4 border-y border-black px-3 py-2 md:px-5 md:py-3">
-
             <span className="font-[font1] text-xl uppercase md:text-4xl">
               {activeProject.title}
             </span>
@@ -281,39 +304,32 @@ const Projects = () => {
             <span className="font-[font1] text-xl md:text-4xl">
               {activeProject.year}
             </span>
-
           </div>
-
         </div>
       )}
 
-
-      {/* ========================================
-          PROJECT TITLE
-      ======================================== */}
+      {/* ==========================================
+          TITLE
+      ========================================== */}
 
       <div className="pt-[45vh]">
-
         <h2 className="font-[font2] md:text-[9.5vw] text-7xl uppercase">
           Projets
         </h2>
-
       </div>
 
-
-      {/* ========================================
+      {/* ==========================================
           PROJECTS
-      ======================================== */}
+      ========================================== */}
 
-      <div className="md:-mt-3 mt-0">
-
+      <div className="md:-mt-3 mt-0 lol">
         {projects.map((elem, idx) => (
           <div
             key={idx}
             className="
+              hero
               w-full
               h-[70vh]
-              min-h-[520px]
               md:h-[850px]
               mb-4
               flex
@@ -321,68 +337,39 @@ const Projects = () => {
               flex-col
               md:gap-4
               gap-2
+              overflow-hidden
+              min-h-0
             "
           >
-
             <ProjectCard
               projects={elem.projects}
               onProjectHover={setActiveProject}
             />
-
           </div>
         ))}
-
       </div>
 
-
-      {/* ========================================
+      {/* ==========================================
           PARTNERS
-      ======================================== */}
+      ========================================== */}
 
       <section
         ref={partnersRef}
         className="mt-32 overflow-hidden"
       >
-
         <div className="mb-16 overflow-hidden">
-
           <p className="partners-label font-[font1] text-sm uppercase mb-5">
             Our Partners
           </p>
 
-          <h3
-            className="
-              partners-title
-              font-[font2]
-              text-[12vw]
-              md:text-[9.5vw]
-              leading-[0.8]
-              uppercase
-              overflow-hidden
-            "
-          >
-
-            <span className="inline-block">
-              Trusted
-            </span>
-
-            {' '}
-
-            <span className="inline-block">
-              By
-            </span>
-
+          <h3 className="partners-title font-[font2] text-[12vw] md:text-[9.5vw] leading-[0.8] uppercase overflow-hidden">
+            <span className="inline-block">Trusted</span>{' '}
+            <span className="inline-block">By</span>
           </h3>
-
         </div>
 
-
-        {/* PARTNER GRID */}
-
         <div className="partner-grid grid grid-cols-2 md:grid-cols-4 border-t border-black">
-
           {partners.map((partner, index) => (
-
             <div
               key={partner}
               className={`
@@ -400,17 +387,11 @@ const Projects = () => {
                 transition-colors
                 duration-500
                 hover:bg-sky-400
-
                 ${index % 2 === 0 ? 'border-r' : ''}
-
                 md:border-r
-
-                ${index === partners.length - 1
-                  ? 'md:border-r-0'
-                  : ''}
+                ${index === partners.length - 1 ? 'md:border-r-0' : ''}
               `}
             >
-
               <div
                 className="
                   absolute
@@ -448,19 +429,14 @@ const Projects = () => {
               >
                 {partner}
               </span>
-
             </div>
-
           ))}
-
         </div>
-
       </section>
 
-
-      {/* ========================================
-          CONTACT SECTION
-      ======================================== */}
+      {/* ==========================================
+          CONTACT
+      ========================================== */}
 
       <section
         ref={contactRef}
@@ -475,23 +451,13 @@ const Projects = () => {
           overflow-hidden
         "
       >
-
         <div className="min-h-screen flex flex-col">
-
-
-          {/* =====================================
-              CONTACT TITLE
-          ===================================== */}
-
           <div>
-
             <p className="contact-label font-[font1] text-sm uppercase text-sky-400 mb-8">
               Get In Touch
             </p>
 
-
             <div className="overflow-hidden">
-
               <h2
                 className="
                   contact-title
@@ -502,45 +468,15 @@ const Projects = () => {
                   uppercase
                 "
               >
-
-                <span className="inline-block">
-                  Let's
-                </span>
-
+                <span className="inline-block">Let's</span>
                 <br />
-
-                <span className="inline-block">
-                  Talk
-                </span>
-
+                <span className="inline-block">Talk</span>
               </h2>
-
             </div>
-
           </div>
 
-
-          {/* =====================================
-              CONTACT DETAILS
-          ===================================== */}
-
-          <div
-            className="
-              contact-items
-              mt-24
-              md:mt-32
-              grid
-              grid-cols-1
-              md:grid-cols-2
-              gap-x-10
-              gap-y-16
-            "
-          >
-
-            {/* EMAIL */}
-
+          <div className="contact-items mt-24 md:mt-32 grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-16">
             <div className="contact-item group">
-
               <p className="font-[font1] text-xs uppercase text-white/40 mb-4">
                 Email
               </p>
@@ -563,14 +499,9 @@ const Projects = () => {
               >
                 info@innovexautomation.com
               </a>
-
             </div>
 
-
-            {/* PHONE */}
-
             <div className="contact-item group">
-
               <p className="font-[font1] text-xs uppercase text-white/40 mb-4">
                 Phone
               </p>
@@ -592,14 +523,9 @@ const Projects = () => {
               >
                 +91 XXXXX XXXXX
               </a>
-
             </div>
 
-
-            {/* LOCATION */}
-
             <div className="contact-item group">
-
               <p className="font-[font1] text-xs uppercase text-white/40 mb-4">
                 Location
               </p>
@@ -620,14 +546,9 @@ const Projects = () => {
               >
                 Sikar, Rajasthan
               </p>
-
             </div>
 
-
-            {/* SERVICES */}
-
             <div className="contact-item group">
-
               <p className="font-[font1] text-xs uppercase text-white/40 mb-4">
                 Services
               </p>
@@ -648,32 +569,10 @@ const Projects = () => {
               >
                 Automation / Electrical / Solar
               </p>
-
             </div>
-
           </div>
 
-
-          {/* =====================================
-              FOOTER
-          ===================================== */}
-
-          <div
-            className="
-              contact-footer
-              border-t
-              border-white/30
-              mt-24
-              pt-6
-              flex
-              flex-col
-              md:flex-row
-              justify-between
-              gap-5
-              mt-auto
-            "
-          >
-
+          <div className="contact-footer border-t border-white/30 mt-auto pt-6 flex flex-col md:flex-row justify-between gap-5">
             <p className="font-[font1] text-xs uppercase">
               © 2026 Innovex Automation
             </p>
@@ -691,13 +590,9 @@ const Projects = () => {
             >
               Back To Top ↑
             </a>
-
           </div>
-
         </div>
-
       </section>
-
     </div>
   )
 }
