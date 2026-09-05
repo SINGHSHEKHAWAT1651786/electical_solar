@@ -1,7 +1,7 @@
 import { useGSAP } from '@gsap/react'
 import gsap from 'gsap'
-import { ScrollTrigger } from 'gsap/all'
-import { useRef, useState } from 'react'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { useLayoutEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { Link } from 'react-router-dom'
 
@@ -16,24 +16,80 @@ import image7 from '../assets/images/image7.jpg'
 gsap.registerPlugin(ScrollTrigger)
 
 const About = () => {
-  // =========================================================
-  // PAGE 1
-  // =========================================================
+  /*
+   * =========================================================
+   * ROUTE / SCROLL RESET
+   * =========================================================
+   */
+
+  useLayoutEffect(() => {
+    window.history.scrollRestoration = 'manual'
+
+    window.scrollTo(0, 0)
+
+    const raf = requestAnimationFrame(() => {
+      window.scrollTo(0, 0)
+      ScrollTrigger.refresh()
+    })
+
+    return () => {
+      cancelAnimationFrame(raf)
+    }
+  }, [])
+
+  /*
+   * =========================================================
+   * PAGE 1 REFS
+   * =========================================================
+   */
 
   const page1Ref = useRef(null)
+  const heroImageRef = useRef(null)
+  const heroStageRef = useRef(null)
+  const heroCopyRef = useRef(null)
+  const heroProgressRef = useRef(null)
+  const heroCounterRef = useRef(null)
+  const heroLabelRef = useRef(null)
+  const aboutMetaRef = useRef(null)
+  const heroStatementRef = useRef(null)
 
-  const page1ImageContainerRef = useRef(null)
-  const page1Image1Ref = useRef(null)
-  const page1Image2Ref = useRef(null)
+  /*
+   * =========================================================
+   * EXPERIENCE
+   * =========================================================
+   */
 
-  const page1ActiveImageRef = useRef(0)
-  const page1CurrentIndexRef = useRef(0)
+  const experienceRef = useRef(null)
+  const experienceTitleRef = useRef(null)
+  const experienceCopyRef = useRef(null)
+  const statRefs = useRef([])
 
-  // =========================================================
-  // PAGE 2
-  // =========================================================
+  /*
+   * =========================================================
+   * PHILOSOPHY
+   * =========================================================
+   */
 
-  const page2Ref = useRef(null)
+  const philosophyRef = useRef(null)
+  const philosophyLabelRef = useRef(null)
+  const philosophyTitleRef = useRef(null)
+
+  /*
+   * =========================================================
+   * SERVICES
+   * =========================================================
+   */
+
+  const servicesRef = useRef(null)
+  const servicesTrackRef = useRef(null)
+  const servicesIntroTitleRef = useRef(null)
+  const servicesIntroCopyRef = useRef(null)
+
+  /*
+   * =========================================================
+   * TEAM
+   * =========================================================
+   */
 
   const page2ImageContainerRef = useRef(null)
   const page2Image1Ref = useRef(null)
@@ -43,9 +99,11 @@ const About = () => {
 
   const [activePerson, setActivePerson] = useState(null)
 
-  // =========================================================
-  // PAGE 1 IMAGES
-  // =========================================================
+  /*
+   * =========================================================
+   * PAGE 1 IMAGES
+   * =========================================================
+   */
 
   const page1Images = [
     image1,
@@ -57,9 +115,60 @@ const About = () => {
     image7,
   ]
 
-  // =========================================================
-  // TEAM IMAGES
-  // =========================================================
+  /*
+   * =========================================================
+   * SERVICES DATA
+   * =========================================================
+   */
+
+  const services = [
+    {
+      number: '01',
+      title: 'Industrial Automation',
+      displayTitle: 'AUTOMATION',
+      description:
+        'Control architecture, PLC systems and intelligent production lines engineered for dependable output.',
+      metadata: 'PLC / SCADA / ROBOTICS',
+      image: image1,
+      tone: 'bg-sky-300 text-black',
+    },
+    {
+      number: '02',
+      title: 'Electrical Solutions',
+      displayTitle: 'ELECTRICAL',
+      description:
+        'Power distribution and industrial electrical systems designed to make every connection count.',
+      metadata: 'POWER / CONTROL / SAFETY',
+      image: image4,
+      tone: 'bg-[#e9e9e6] text-black',
+    },
+    {
+      number: '03',
+      title: 'Solar Energy',
+      displayTitle: 'SOLAR',
+      description:
+        'Site-ready solar infrastructure that turns clean energy into a measurable operating advantage.',
+      metadata: 'PV / STORAGE / MONITORING',
+      image: image5,
+      tone: 'bg-[#101214] text-white',
+    },
+    {
+      number: '04',
+      title: 'Commissioning & Support',
+      displayTitle: 'DELIVERY',
+      description:
+        'From first energisation to long-term support, we keep the system moving after installation.',
+      metadata: 'START-UP / TRAINING / AMC',
+      image: image6,
+      tone: 'bg-sky-300 text-black',
+    },
+  ]
+
+  /*
+   * =========================================================
+   * TEAM IMAGES
+   * =========================================================
+   */
 
   const teamImages = {
     carl:
@@ -105,288 +214,11 @@ const About = () => {
       'https://k72.ca/uploads/teamMembers/joel_480X640_3-480x640.jpg',
   }
 
-  // =========================================================
-  // PRELOAD PAGE 1 IMAGES
-  // =========================================================
-
-  useGSAP(() => {
-    page1Images.forEach((src) => {
-      const img = new Image()
-      img.src = src
-    })
-  }, [])
-
-  // =========================================================
-  // PAGE 1 IMAGE SYSTEM
-  //
-  // ARCHITECTURE
-  //
-  // PAGE 1
-  // │
-  // ├── white background        z-0
-  // │
-  // ├── image wrapper           z-10
-  // │       └── GSAP PIN
-  // │
-  // └── text                    z-20
-  //
-  // IMPORTANT:
-  //
-  // NO position: fixed
-  // NO createPortal for PAGE 1 image
-  //
-  // The image belongs to Page 1.
-  // GSAP pins it during Page 1 scrolling.
-  // =========================================================
-
-  useGSAP(() => {
-    const page1 = page1Ref.current
-    const imageContainer = page1ImageContainerRef.current
-    const imageA = page1Image1Ref.current
-    const imageB = page1Image2Ref.current
-
-    if (
-      !page1 ||
-      !imageContainer ||
-      !imageA ||
-      !imageB
-    ) {
-      return
-    }
-
-    // -------------------------------------------------------
-    // INITIAL IMAGES
-    // -------------------------------------------------------
-
-    imageA.src = page1Images[0]
-    imageB.src = page1Images[1]
-
-    page1ActiveImageRef.current = 0
-    page1CurrentIndexRef.current = 0
-
-    // -------------------------------------------------------
-    // INITIAL IMAGE STATE
-    // -------------------------------------------------------
-
-    gsap.set(imageContainer, {
-      opacity: 1,
-      visibility: 'visible',
-    })
-
-    gsap.set(imageA, {
-      opacity: 1,
-      scale: 1,
-      x: 0,
-      y: 0,
-    })
-
-    gsap.set(imageB, {
-      opacity: 0,
-      scale: 1.05,
-      x: 0,
-      y: 0,
-    })
-
-    // =======================================================
-    // IMAGE CHANGE
-    // =======================================================
-
-    const changeImage = (nextIndex) => {
-      if (
-        nextIndex === page1CurrentIndexRef.current ||
-        nextIndex < 0 ||
-        nextIndex >= page1Images.length
-      ) {
-        return
-      }
-
-      const currentImage =
-        page1ActiveImageRef.current === 0
-          ? imageA
-          : imageB
-
-      const nextImage =
-        page1ActiveImageRef.current === 0
-          ? imageB
-          : imageA
-
-      nextImage.src = page1Images[nextIndex]
-
-      gsap.killTweensOf([
-        currentImage,
-        nextImage,
-      ])
-
-      // -----------------------------------------------------
-      // NEXT IMAGE START
-      // -----------------------------------------------------
-
-      gsap.set(nextImage, {
-        opacity: 0,
-        scale: 1.08,
-        x: 0,
-        y: 0,
-      })
-
-      // -----------------------------------------------------
-      // CURRENT IMAGE OUT
-      // -----------------------------------------------------
-
-      gsap.to(currentImage, {
-        opacity: 0,
-        scale: 0.98,
-        duration: 0.35,
-        ease: 'power2.out',
-        overwrite: true,
-      })
-
-      // -----------------------------------------------------
-      // NEXT IMAGE IN
-      // -----------------------------------------------------
-
-      gsap.to(nextImage, {
-        opacity: 1,
-        scale: 1,
-        duration: 0.55,
-        ease: 'power3.out',
-        overwrite: true,
-      })
-
-      page1ActiveImageRef.current =
-        page1ActiveImageRef.current === 0
-          ? 1
-          : 0
-
-      page1CurrentIndexRef.current = nextIndex
-    }
-
-    // =======================================================
-    // GSAP PIN
-    //
-    // This is the important part.
-    //
-    // The image is NOT fixed.
-    //
-    // GSAP pins this element while Page 1 scrolls.
-    // =======================================================
-
-    const trigger = ScrollTrigger.create({
-      trigger: page1,
-
-      pin: imageContainer,
-
-      start: 'top top',
-
-      end: 'bottom bottom',
-
-      pinSpacing: false,
-
-      anticipatePin: 1,
-
-      invalidateOnRefresh: true,
-
-      onUpdate: (self) => {
-        const progress = self.progress
-
-        const index = Math.min(
-          page1Images.length - 1,
-          Math.floor(
-            progress * page1Images.length
-          )
-        )
-
-        changeImage(index)
-      },
-
-      // -----------------------------------------------------
-      // PAGE 1 ENTER
-      // -----------------------------------------------------
-
-      onEnter: () => {
-        gsap.to(imageContainer, {
-          opacity: 1,
-          duration: 0.25,
-          overwrite: true,
-        })
-      },
-
-      // -----------------------------------------------------
-      // ENTER PAGE 1 FROM BELOW
-      // -----------------------------------------------------
-
-      onEnterBack: () => {
-        gsap.to(imageContainer, {
-          opacity: 1,
-          duration: 0.25,
-          overwrite: true,
-        })
-      },
-
-      // -----------------------------------------------------
-      // LEAVE PAGE 1
-      // -----------------------------------------------------
-
-      onLeave: () => {
-        gsap.to(imageContainer, {
-          opacity: 0,
-          duration: 0.35,
-          ease: 'power2.out',
-          overwrite: true,
-        })
-      },
-
-      // -----------------------------------------------------
-      // BACK INTO PAGE 1
-      // -----------------------------------------------------
-
-      onLeaveBack: () => {
-        gsap.to(imageContainer, {
-          opacity: 1,
-          duration: 0.3,
-          overwrite: true,
-        })
-      },
-    })
-
-    // -------------------------------------------------------
-    // REFRESH AFTER LAYOUT
-    // -------------------------------------------------------
-
-    requestAnimationFrame(() => {
-      ScrollTrigger.refresh()
-    })
-
-    // -------------------------------------------------------
-    // CLEANUP
-    // -------------------------------------------------------
-
-    return () => {
-      trigger.kill()
-
-      gsap.killTweensOf([
-        imageContainer,
-        imageA,
-        imageB,
-      ])
-    }
-  }, [])
-
-  // =========================================================
-  // PAGE 2 IMAGE INITIALIZATION
-  // =========================================================
-
-  useGSAP(() => {
-    if (!page2ImageContainerRef.current) return
-
-    gsap.set(page2ImageContainerRef.current, {
-      autoAlpha: 0,
-      scale: 0.92,
-    })
-  }, [])
-
-  // =========================================================
-  // TEAM MEMBERS
-  // =========================================================
+  /*
+   * =========================================================
+   * TEAM MEMBERS
+   * =========================================================
+   */
 
   const teamMembers = [
     {
@@ -461,20 +293,1806 @@ const About = () => {
     },
   ]
 
-  // =========================================================
-  // PRELOAD TEAM IMAGES
-  // =========================================================
+  /*
+   * =========================================================
+   * PHILOSOPHY GSAP
+   *
+   * PRESERVED
+   * =========================================================
+   */
 
   useGSAP(() => {
-    teamMembers.forEach((member) => {
-      const img = new Image()
-      img.src = member.image
+    const section = philosophyRef.current
+    const label = philosophyLabelRef.current
+    const title = philosophyTitleRef.current
+
+    if (!section || !label || !title) return
+
+    const lines =
+      title.querySelectorAll('.philosophy-line')
+
+    const highlightedLine =
+      title.querySelector('.philosophy-highlight')
+
+    const intro = gsap.timeline({
+      scrollTrigger: {
+        trigger: section,
+        start: 'top 82%',
+        end: 'top 18%',
+        scrub: 1,
+      },
     })
+
+    intro.fromTo(
+      label,
+      {
+        y: 30,
+        opacity: 0,
+        letterSpacing: '0.5em',
+      },
+      {
+        y: 0,
+        opacity: 1,
+        letterSpacing: '0.2em',
+        duration: 0.35,
+        ease: 'power2.out',
+      }
+    )
+
+    intro.fromTo(
+      lines,
+      {
+        clipPath: (index) =>
+          index % 2 === 0
+            ? 'inset(0 100% 0 0)'
+            : 'inset(0 0 0 100%)',
+
+        x: (index) =>
+          index % 2 === 0 ? -140 : 140,
+
+        skewX: (index) =>
+          index % 2 === 0 ? -8 : 8,
+
+        scaleX: 0.72,
+        opacity: 0,
+      },
+      {
+        clipPath: 'inset(0 0% 0 0%)',
+        x: 0,
+        skewX: 0,
+        scaleX: 1,
+        opacity: 1,
+        duration: 0.7,
+        stagger: 0.16,
+        ease: 'power4.out',
+      },
+      '-=0.12'
+    )
+
+    if (highlightedLine) {
+      intro.fromTo(
+        highlightedLine,
+        {
+          color: '#ffffff',
+          textShadow:
+            '0 0 0 rgba(125, 211, 252, 0)',
+        },
+        {
+          color: '#7dd3fc',
+          textShadow:
+            '0 0 28px rgba(125, 211, 252, 0.45)',
+          duration: 0.45,
+          ease: 'none',
+        },
+        '-=0.2'
+      )
+    }
+
+    const drift = gsap.to(lines, {
+      x: (index) =>
+        index % 2 === 0 ? -18 : 18,
+
+      ease: 'none',
+
+      scrollTrigger: {
+        trigger: section,
+        start: 'top bottom',
+        end: 'bottom top',
+        scrub: 1.4,
+      },
+    })
+
+    return () => {
+      intro.kill()
+      drift.kill()
+    }
   }, [])
 
-  // =========================================================
-  // SHOW TEAM IMAGE
-  // =========================================================
+  /*
+   * =========================================================
+   * PAGE 1 GSAP
+   *
+   * IMPORTANT:
+   *
+   * heroCopyRef IS NOT animated with opacity.
+   *
+   * This prevents the white/invisible problem.
+   *
+   * TITLE IS COMPLETELY UNTOUCHED.
+   * =========================================================
+   */
+
+  useGSAP(() => {
+    const section = page1Ref.current
+    const stage = heroStageRef.current
+    const image = heroImageRef.current
+    const copy = heroCopyRef.current
+    const progress = heroProgressRef.current
+    const counter = heroCounterRef.current
+    const label = heroLabelRef.current
+    const aboutMeta = aboutMetaRef.current
+    const heroStatement = heroStatementRef.current
+
+    if (
+      !section ||
+      !stage ||
+      !image ||
+      !copy ||
+      !heroStatement
+    ) {
+      return
+    }
+
+    const mm = gsap.matchMedia()
+
+    const reducedMotion =
+      window.matchMedia(
+        '(prefers-reduced-motion: reduce)'
+      ).matches
+
+    if (reducedMotion) {
+      gsap.set(copy, {
+        clearProps: 'all',
+      })
+
+      gsap.set(stage, {
+        clearProps: 'all',
+      })
+
+      return
+    }
+
+    const highlight =
+      heroStatement.querySelector(
+        '.about-highlight'
+      )
+
+    const subline =
+      heroStatement.querySelector(
+        '.about-subline'
+      )
+
+    const sweep =
+      aboutMeta?.querySelector(
+        '.about-meta-sweep'
+      )
+
+    const metaRows =
+      aboutMeta?.querySelectorAll(
+        '.about-meta-row'
+      )
+
+    /*
+     * ---------------------------------------------------------
+     * ABOUT TEXT ANIMATION
+     *
+     * Clean editorial reveal.
+     * No opacity: 0 on the whole panel.
+     * ---------------------------------------------------------
+     */
+
+    const createAboutTextAnimation = (
+      mobile = false
+    ) => {
+      /*
+       * RESET
+       */
+
+      gsap.set(copy, {
+        clearProps:
+          'opacity,x,y,scale,transform',
+      })
+
+      /*
+       * META
+       */
+
+      if (aboutMeta) {
+        gsap.set(aboutMeta, {
+          opacity: 1,
+          y: mobile ? 14 : 20,
+        })
+      }
+
+      if (metaRows?.length) {
+        gsap.set(metaRows, {
+          opacity: 1,
+          x: 0,
+          y: 0,
+        })
+      }
+
+      if (sweep) {
+        gsap.set(sweep, {
+          scaleX: 0,
+          transformOrigin:
+            'left center',
+        })
+      }
+
+      /*
+       * STATEMENT
+       *
+       * It remains dark and visible.
+       */
+
+      gsap.set(heroStatement, {
+        opacity: 1,
+        y: mobile ? 24 : 35,
+        x: 0,
+        skewX: 0,
+        clipPath:
+          'inset(0 0 0% 0)',
+      })
+
+      /*
+       * BLUE HIGHLIGHT
+       */
+
+      if (highlight) {
+        gsap.set(highlight, {
+          opacity: 1,
+          scaleX: 0.82,
+          x: 0,
+          skewX: 0,
+          transformOrigin:
+            'left center',
+        })
+      }
+
+      /*
+       * SUBLINE
+       */
+
+      if (subline) {
+        gsap.set(subline, {
+          opacity: 1,
+          y: mobile ? 12 : 18,
+        })
+      }
+
+      /*
+       * -------------------------------------------------------
+       * META TIMELINE
+       * -------------------------------------------------------
+       */
+
+      const metaTimeline =
+        gsap.timeline({
+          scrollTrigger: {
+            trigger: aboutMeta,
+            start: mobile
+              ? 'top 92%'
+              : 'top 88%',
+            end: mobile
+              ? 'top 68%'
+              : 'top 62%',
+            scrub: 0.7,
+            invalidateOnRefresh: true,
+          },
+        })
+
+      if (aboutMeta) {
+        metaTimeline.to(
+          aboutMeta,
+          {
+            y: 0,
+            duration: 0.45,
+            ease: 'power3.out',
+          }
+        )
+      }
+
+      if (sweep) {
+        metaTimeline.to(
+          sweep,
+          {
+            scaleX: 1,
+            duration: 0.7,
+            ease: 'power4.inOut',
+          },
+          '<'
+        )
+      }
+
+      /*
+       * -------------------------------------------------------
+       * MAIN STATEMENT
+       * -------------------------------------------------------
+       */
+
+      const statementTimeline =
+        gsap.timeline({
+          scrollTrigger: {
+            trigger: heroStatement,
+            start: mobile
+              ? 'top 91%'
+              : 'top 88%',
+            end: mobile
+              ? 'top 57%'
+              : 'top 52%',
+            scrub: 0.7,
+            invalidateOnRefresh: true,
+          },
+        })
+
+      statementTimeline.to(
+        heroStatement,
+        {
+          y: 0,
+          duration: 0.8,
+          ease: 'power4.out',
+        }
+      )
+
+      /*
+       * HIGHLIGHT
+       */
+
+      if (highlight) {
+        statementTimeline.to(
+          highlight,
+          {
+            scaleX: 1,
+            duration: 0.45,
+            ease: 'power3.out',
+          },
+          '-=0.38'
+        )
+      }
+
+      /*
+       * SUBLINE
+       */
+
+      if (subline) {
+        statementTimeline.to(
+          subline,
+          {
+            y: 0,
+            duration: 0.4,
+            ease: 'power3.out',
+          },
+          '-=0.18'
+        )
+      }
+
+      /*
+       * -------------------------------------------------------
+       * VERY SMALL SCROLL FLOAT
+       *
+       * No aggressive movement.
+       * -------------------------------------------------------
+       */
+
+      const statementFloat =
+        gsap.to(heroStatement, {
+          y: mobile ? -6 : -12,
+          ease: 'none',
+
+          scrollTrigger: {
+            trigger: heroStatement,
+            start: 'top bottom',
+            end: 'bottom top',
+            scrub: 1.5,
+            invalidateOnRefresh: true,
+          },
+        })
+
+      /*
+       * HIGHLIGHT FLOAT
+       */
+
+      let highlightFloat = null
+
+      if (highlight) {
+        highlightFloat =
+          gsap.to(highlight, {
+            x: mobile ? 2 : 4,
+            ease: 'none',
+
+            scrollTrigger: {
+              trigger: heroStatement,
+              start: 'top bottom',
+              end: 'bottom top',
+              scrub: 1.8,
+              invalidateOnRefresh: true,
+            },
+          })
+      }
+
+      return () => {
+        metaTimeline.kill()
+        statementTimeline.kill()
+        statementFloat.kill()
+
+        if (highlightFloat) {
+          highlightFloat.kill()
+        }
+      }
+    }
+
+    /*
+     * =======================================================
+     * DESKTOP
+     * =======================================================
+     */
+
+    mm.add(
+      '(min-width: 1024px)',
+      () => {
+        let currentIndex = 0
+        let transitionRunning = false
+        let queuedIndex = null
+
+        image.src = page1Images[0]
+
+        /*
+         * STAGE
+         */
+
+        gsap.set(stage, {
+          opacity: 1,
+          scale: 1,
+          y: 0,
+          x: 0,
+          rotation: 0,
+        })
+
+        /*
+         * IMAGE
+         */
+
+        gsap.set(image, {
+          scale: 1.1,
+          x: 0,
+          y: 0,
+          rotation: 0,
+          opacity: 1,
+        })
+
+        /*
+         * COPY
+         *
+         * ALWAYS VISIBLE.
+         */
+
+        gsap.set(copy, {
+          opacity: 1,
+          x: 0,
+          y: 0,
+        })
+
+        /*
+         * ABOUT TEXT
+         */
+
+        createAboutTextAnimation(false)
+
+        /*
+         * -----------------------------------------------------
+         * IMAGE CHANGE
+         * -----------------------------------------------------
+         */
+
+        const changeImage = (
+          nextIndex
+        ) => {
+          if (
+            nextIndex ===
+            currentIndex
+          ) {
+            return
+          }
+
+          if (transitionRunning) {
+            queuedIndex = nextIndex
+            return
+          }
+
+          transitionRunning = true
+
+          const direction =
+            nextIndex > currentIndex
+              ? 1
+              : -1
+
+          currentIndex = nextIndex
+
+          const timeline =
+            gsap.timeline({
+              onComplete: () => {
+                transitionRunning =
+                  false
+
+                if (
+                  queuedIndex !== null &&
+                  queuedIndex !==
+                    currentIndex
+                ) {
+                  const queuedNextIndex =
+                    queuedIndex
+
+                  queuedIndex = null
+
+                  changeImage(
+                    queuedNextIndex
+                  )
+                }
+              },
+            })
+
+          /*
+           * EXIT
+           */
+
+          timeline.to(image, {
+            x:
+              direction * -32,
+            y:
+              direction * -16,
+            scale: 1.16,
+            rotation:
+              direction * -1.5,
+            opacity: 0,
+            duration: 0.2,
+            ease: 'power2.in',
+          })
+
+          /*
+           * CHANGE SOURCE
+           */
+
+          timeline.call(() => {
+            image.src =
+              page1Images[
+                nextIndex
+              ]
+          })
+
+          /*
+           * ENTER
+           */
+
+          timeline.set(image, {
+            x:
+              direction * 28,
+            y:
+              direction * 14,
+            scale: 1.16,
+            rotation:
+              direction * 1.5,
+          })
+
+          timeline.to(image, {
+            x: 0,
+            y: 0,
+            scale: 1.08,
+            rotation: 0,
+            opacity: 1,
+            duration: 0.42,
+            ease: 'power4.out',
+          })
+
+          /*
+           * SMALL STAGE MOVEMENT
+           */
+
+          timeline.fromTo(
+            stage,
+            {
+              rotation:
+                direction * -1,
+            },
+            {
+              rotation: 0,
+              duration: 0.45,
+              ease: 'power3.out',
+            },
+            0
+          )
+
+          /*
+           * COUNTER
+           */
+
+          if (counter) {
+            counter.textContent =
+              `${String(
+                nextIndex + 1
+              ).padStart(
+                2,
+                '0'
+              )} / 07`
+          }
+
+          /*
+           * LABEL
+           */
+
+          if (label) {
+            const labels = [
+              'CONTROL / AUTOMATION',
+              'FIELD / ENGINEERING',
+              'POWER / DISTRIBUTION',
+              'SOLAR / ENERGY',
+              'INDUSTRIAL / CONTROL',
+              'PROJECT / DELIVERY',
+              'SYSTEM / COMPLETE',
+            ]
+
+            label.textContent =
+              labels[nextIndex]
+          }
+        }
+
+        /*
+         * -----------------------------------------------------
+         * MAIN PAGE 1 SCROLL
+         *
+         * DOES NOT TOUCH COPY OPACITY.
+         * -----------------------------------------------------
+         */
+
+        const trigger =
+          ScrollTrigger.create({
+            trigger: section,
+
+            start: 'top top',
+
+            end: 'bottom bottom',
+
+            scrub: true,
+
+            onUpdate: (self) => {
+              const progressValue =
+                self.progress
+
+              /*
+               * IMAGE SEQUENCE
+               */
+
+              const nextIndex =
+                Math.min(
+                  page1Images.length -
+                    1,
+
+                  Math.floor(
+                    progressValue *
+                      page1Images.length
+                  )
+                )
+
+              changeImage(
+                nextIndex
+              )
+
+              /*
+               * PROGRESS
+               */
+
+              if (progress) {
+                gsap.set(progress, {
+                  scaleX:
+                    progressValue,
+                })
+              }
+
+              /*
+               * IMAGE PARALLAX ONLY
+               */
+
+              gsap.set(image, {
+                y:
+                  Math.sin(
+                    progressValue *
+                      Math.PI
+                  ) * -22,
+              })
+            },
+          })
+
+        /*
+         * STAGE ENTRY
+         */
+
+        gsap.from(stage, {
+          scale: 0.9,
+          opacity: 0,
+          rotation: -2,
+          duration: 1,
+          ease: 'power4.out',
+        })
+
+        return () => {
+          trigger.kill()
+        }
+      }
+    )
+
+    /*
+     * =======================================================
+     * TABLET / MOBILE
+     * =======================================================
+     */
+
+    mm.add(
+      '(max-width: 1023px)',
+      () => {
+        let currentIndex = 0
+        let transitioning = false
+        let queuedIndex = null
+
+        image.src = page1Images[0]
+
+        /*
+         * STAGE
+         */
+
+        gsap.set(stage, {
+          opacity: 1,
+          scale: 1,
+          rotation: 0,
+          x: 0,
+          y: 0,
+        })
+
+        /*
+         * IMAGE
+         */
+
+        gsap.set(image, {
+          scale: 1.06,
+          x: 0,
+          y: 0,
+          opacity: 1,
+        })
+
+        /*
+         * COPY
+         *
+         * ALWAYS VISIBLE.
+         */
+
+        gsap.set(copy, {
+          opacity: 1,
+          x: 0,
+          y: 0,
+        })
+
+        /*
+         * ABOUT TEXT
+         */
+
+        createAboutTextAnimation(true)
+
+        /*
+         * -----------------------------------------------------
+         * MOBILE IMAGE CHANGE
+         * -----------------------------------------------------
+         */
+
+        const changeMobileImage = (
+          nextIndex
+        ) => {
+          if (
+            nextIndex ===
+            currentIndex
+          ) {
+            return
+          }
+
+          if (transitioning) {
+            queuedIndex = nextIndex
+            return
+          }
+
+          transitioning = true
+
+          const direction =
+            nextIndex > currentIndex
+              ? 1
+              : -1
+
+          currentIndex = nextIndex
+
+          const timeline =
+            gsap.timeline({
+              onComplete: () => {
+                transitioning =
+                  false
+
+                if (
+                  queuedIndex !== null &&
+                  queuedIndex !==
+                    currentIndex
+                ) {
+                  const queuedNextIndex =
+                    queuedIndex
+
+                  queuedIndex = null
+
+                  changeMobileImage(
+                    queuedNextIndex
+                  )
+                }
+              },
+            })
+
+          /*
+           * EXIT
+           */
+
+          timeline.to(image, {
+            x:
+              direction * -18,
+            scale: 1.1,
+            opacity: 0,
+            duration: 0.16,
+            ease: 'power2.in',
+          })
+
+          /*
+           * CHANGE IMAGE
+           */
+
+          timeline.call(() => {
+            image.src =
+              page1Images[
+                nextIndex
+              ]
+          })
+
+          /*
+           * ENTER
+           */
+
+          timeline.set(image, {
+            x:
+              direction * 18,
+            scale: 1.1,
+          })
+
+          timeline.to(image, {
+            x: 0,
+            scale: 1.06,
+            opacity: 1,
+            duration: 0.32,
+            ease: 'power3.out',
+          })
+
+          /*
+           * COUNTER
+           */
+
+          if (counter) {
+            counter.textContent =
+              `${String(
+                nextIndex + 1
+              ).padStart(
+                2,
+                '0'
+              )} / 07`
+          }
+        }
+
+        /*
+         * -----------------------------------------------------
+         * MOBILE SCROLL
+         *
+         * NO COPY OPACITY.
+         * -----------------------------------------------------
+         */
+
+        const trigger =
+          ScrollTrigger.create({
+            trigger: section,
+
+            start: 'top top',
+
+            end: 'bottom bottom',
+
+            scrub: 0.35,
+
+            onUpdate: (self) => {
+              const progressValue =
+                self.progress
+
+              const nextIndex =
+                Math.min(
+                  page1Images.length -
+                    1,
+
+                  Math.floor(
+                    progressValue *
+                      page1Images.length
+                  )
+                )
+
+              changeMobileImage(
+                nextIndex
+              )
+
+              /*
+               * PROGRESS
+               */
+
+              if (progress) {
+                gsap.set(progress, {
+                  scaleX:
+                    progressValue,
+                })
+              }
+
+              /*
+               * IMAGE PARALLAX
+               */
+
+              gsap.set(image, {
+                y:
+                  Math.sin(
+                    progressValue *
+                      Math.PI
+                  ) * -10,
+              })
+            },
+          })
+
+        /*
+         * STAGE ENTRY
+         */
+
+        gsap.from(stage, {
+          scale: 0.94,
+          opacity: 0,
+          duration: 0.75,
+          ease: 'power3.out',
+        })
+
+        return () => {
+          trigger.kill()
+        }
+      }
+    )
+
+    return () => {
+      mm.revert()
+    }
+  }, [])
+
+  /*
+   * =========================================================
+   * EXPERIENCE GSAP
+   *
+   * CLEANER VERSION
+   * =========================================================
+   */
+
+  useGSAP(() => {
+    const section = experienceRef.current
+    const title = experienceTitleRef.current
+    const copy = experienceCopyRef.current
+
+    if (
+      !section ||
+      !title ||
+      !copy
+    ) {
+      return
+    }
+
+    const mm = gsap.matchMedia()
+
+    const reducedMotion =
+      window.matchMedia(
+        '(prefers-reduced-motion: reduce)'
+      ).matches
+
+    if (reducedMotion) {
+      return
+    }
+
+    const createExperienceAnimation = (
+      mobile = false
+    ) => {
+      const meta =
+        section.querySelector(
+          '.experience-meta'
+        )
+
+      const index =
+        section.querySelector(
+          '.experience-index'
+        )
+
+      const status =
+        section.querySelector(
+          '.experience-status'
+        )
+
+      const lead =
+        section.querySelector(
+          '.experience-lead'
+        )
+
+      const highlight =
+        section.querySelector(
+          '.experience-highlight'
+        )
+
+      const body =
+        section.querySelector(
+          '.experience-body'
+        )
+
+      /*
+       * INITIAL
+       */
+
+      gsap.set(meta, {
+        opacity: 1,
+        y: mobile ? 15 : 22,
+      })
+
+      gsap.set(index, {
+        opacity: 1,
+        x: 0,
+      })
+
+      gsap.set(status, {
+        opacity: 1,
+        x: 0,
+      })
+
+      /*
+       * TITLE
+       */
+
+      gsap.set(title, {
+        opacity: 1,
+        x: mobile ? -30 : -70,
+        y: mobile ? 25 : 35,
+        clipPath:
+          'inset(0 0 0 0)',
+        transformOrigin:
+          'left center',
+      })
+
+      /*
+       * COPY
+       */
+
+      gsap.set(copy, {
+        opacity: 1,
+        y: mobile ? 25 : 35,
+      })
+
+      /*
+       * LEAD
+       */
+
+      gsap.set(lead, {
+        opacity: 1,
+        y: mobile ? 20 : 30,
+      })
+
+      /*
+       * HIGHLIGHT
+       */
+
+      if (highlight) {
+        gsap.set(highlight, {
+          opacity: 1,
+          scaleX: 0.75,
+          transformOrigin:
+            'left center',
+        })
+      }
+
+      /*
+       * BODY
+       */
+
+      gsap.set(body, {
+        opacity: 1,
+        y: mobile ? 15 : 25,
+      })
+
+      /*
+       * MAIN TIMELINE
+       */
+
+      const timeline =
+        gsap.timeline({
+          scrollTrigger: {
+            trigger: section,
+
+            start: mobile
+              ? 'top 88%'
+              : 'top 84%',
+
+            end: mobile
+              ? 'top 45%'
+              : 'top 25%',
+
+            scrub: mobile
+              ? 0.65
+              : 0.8,
+
+            invalidateOnRefresh: true,
+          },
+        })
+
+      /*
+       * META
+       */
+
+      timeline.to(
+        meta,
+        {
+          y: 0,
+          duration: 0.3,
+          ease: 'power3.out',
+        }
+      )
+
+      /*
+       * TITLE
+       */
+
+      timeline.to(
+        title,
+        {
+          x: 0,
+          y: 0,
+          duration: mobile
+            ? 0.65
+            : 0.8,
+          ease: 'power4.out',
+        },
+        '-=0.08'
+      )
+
+      /*
+       * COPY
+       */
+
+      timeline.to(
+        copy,
+        {
+          y: 0,
+          duration: 0.55,
+          ease: 'power3.out',
+        },
+        '-=0.35'
+      )
+
+      /*
+       * LEAD
+       */
+
+      timeline.to(
+        lead,
+        {
+          y: 0,
+          duration: 0.55,
+          ease: 'power3.out',
+        },
+        '-=0.3'
+      )
+
+      /*
+       * HIGHLIGHT
+       */
+
+      if (highlight) {
+        timeline.to(
+          highlight,
+          {
+            scaleX: 1,
+            duration: 0.4,
+            ease: 'power3.out',
+          },
+          '-=0.28'
+        )
+      }
+
+      /*
+       * BODY
+       */
+
+      timeline.to(
+        body,
+        {
+          y: 0,
+          duration: 0.45,
+          ease: 'power3.out',
+        },
+        '-=0.18'
+      )
+
+      return () => {
+        timeline.kill()
+      }
+    }
+
+    /*
+     * =======================================================
+     * DESKTOP EXPERIENCE
+     * =======================================================
+     */
+
+    mm.add(
+      '(min-width: 768px)',
+      () => {
+        const cleanup =
+          createExperienceAnimation(
+            false
+          )
+
+        /*
+         * STATS
+         */
+
+        statRefs.current.forEach(
+          (stat, index) => {
+            if (!stat) return
+
+            const number =
+              stat.querySelector(
+                '.experience-stat-number'
+              )
+
+            const label =
+              stat.querySelector(
+                '.experience-stat-label'
+              )
+
+            gsap.set(stat, {
+              opacity: 1,
+              y: 80,
+              scale: 0.94,
+              rotation:
+                index % 2 === 0
+                  ? -2
+                  : 2,
+            })
+
+            if (number) {
+              gsap.set(number, {
+                y: 20,
+              })
+            }
+
+            if (label) {
+              gsap.set(label, {
+                opacity: 1,
+                y: 12,
+              })
+            }
+
+            const statTimeline =
+              gsap.timeline({
+                scrollTrigger: {
+                  trigger: stat,
+                  start: 'top 90%',
+                  end: 'top 55%',
+                  scrub: 0.8,
+                },
+              })
+
+            statTimeline.to(
+              stat,
+              {
+                opacity: 1,
+                y: 0,
+                scale: 1,
+                rotation: 0,
+                duration: 0.8,
+                ease: 'power4.out',
+              }
+            )
+
+            if (number) {
+              statTimeline.to(
+                number,
+                {
+                  y: 0,
+                  duration: 0.35,
+                  ease: 'power3.out',
+                },
+                '-=0.4'
+              )
+            }
+
+            if (label) {
+              statTimeline.to(
+                label,
+                {
+                  opacity: 1,
+                  y: 0,
+                  duration: 0.3,
+                  ease: 'power3.out',
+                },
+                '-=0.2'
+              )
+            }
+          }
+        )
+
+        return cleanup
+      }
+    )
+
+    /*
+     * =======================================================
+     * MOBILE EXPERIENCE
+     * =======================================================
+     */
+
+    mm.add(
+      '(max-width: 767px)',
+      () => {
+        const cleanup =
+          createExperienceAnimation(
+            true
+          )
+
+        statRefs.current.forEach(
+          (stat) => {
+            if (!stat) return
+
+            const number =
+              stat.querySelector(
+                '.experience-stat-number'
+              )
+
+            const label =
+              stat.querySelector(
+                '.experience-stat-label'
+              )
+
+            gsap.set(stat, {
+              opacity: 1,
+              y: 45,
+              scale: 0.97,
+            })
+
+            if (number) {
+              gsap.set(number, {
+                y: 12,
+              })
+            }
+
+            if (label) {
+              gsap.set(label, {
+                opacity: 1,
+                y: 8,
+              })
+            }
+
+            const statTimeline =
+              gsap.timeline({
+                scrollTrigger: {
+                  trigger: stat,
+                  start: 'top 92%',
+                  end: 'top 67%',
+                  scrub: 0.65,
+                },
+              })
+
+            statTimeline.to(
+              stat,
+              {
+                opacity: 1,
+                y: 0,
+                scale: 1,
+                duration: 0.7,
+                ease: 'power3.out',
+              }
+            )
+
+            if (number) {
+              statTimeline.to(
+                number,
+                {
+                  y: 0,
+                  duration: 0.3,
+                  ease: 'power3.out',
+                },
+                '-=0.35'
+              )
+            }
+
+            if (label) {
+              statTimeline.to(
+                label,
+                {
+                  opacity: 1,
+                  y: 0,
+                  duration: 0.25,
+                  ease: 'power3.out',
+                },
+                '-=0.15'
+              )
+            }
+          }
+        )
+
+        return cleanup
+      }
+    )
+
+    return () => {
+      mm.revert()
+    }
+  }, [])
+
+  /*
+   * =========================================================
+   * SERVICES GSAP
+   *
+   * PRESERVED
+   * =========================================================
+   */
+
+  useGSAP(() => {
+    const section = servicesRef.current
+
+    if (!section) return
+
+    const mm = gsap.matchMedia()
+
+    const cards = gsap.utils.toArray(
+      '.service-card',
+      section
+    )
+
+    const reducedMotion =
+      window.matchMedia(
+        '(prefers-reduced-motion: reduce)'
+      ).matches
+
+    if (reducedMotion) {
+      gsap.set(cards, {
+        clearProps: 'all',
+      })
+
+      return () => mm.revert()
+    }
+
+    /*
+     * DESKTOP
+     */
+
+    mm.add(
+      '(min-width: 1024px)',
+      () => {
+        gsap.fromTo(
+          servicesIntroTitleRef.current,
+          {
+            x: -90,
+            opacity: 0,
+          },
+          {
+            x: 0,
+            opacity: 1,
+
+            scrollTrigger: {
+              trigger:
+                servicesIntroTitleRef.current,
+              start: 'top 82%',
+              end: 'top 45%',
+              scrub: 0.8,
+            },
+          }
+        )
+
+        gsap.fromTo(
+          servicesIntroCopyRef.current,
+          {
+            x: 90,
+            opacity: 0,
+          },
+          {
+            x: 0,
+            opacity: 1,
+
+            scrollTrigger: {
+              trigger:
+                servicesIntroCopyRef.current,
+              start: 'top 88%',
+              end: 'top 52%',
+              scrub: 0.8,
+            },
+          }
+        )
+
+        cards.forEach(
+          (card, index) => {
+            const image =
+              card.querySelector(
+                '.service-image'
+              )
+
+            const titleLines =
+              card.querySelectorAll(
+                '.service-title-line'
+              )
+
+            const arrow =
+              card.querySelector(
+                '.service-arrow'
+              )
+
+            gsap.fromTo(
+              card,
+              {
+                y: 90,
+                rotation:
+                  index % 2
+                    ? 1.5
+                    : -1.5,
+              },
+              {
+                y: 0,
+                rotation: 0,
+
+                scrollTrigger: {
+                  trigger: card,
+                  start: 'top 88%',
+                  end: 'top 48%',
+                  scrub: 0.8,
+                },
+              }
+            )
+
+            gsap.fromTo(
+              image,
+              {
+                clipPath:
+                  'inset(0 100% 0 0)',
+                scale: 1.15,
+              },
+              {
+                clipPath:
+                  'inset(0 0% 0 0)',
+                scale: 1,
+
+                scrollTrigger: {
+                  trigger: card,
+                  start: 'top 86%',
+                  end: 'top 48%',
+                  scrub: 0.8,
+                },
+              }
+            )
+
+            gsap.fromTo(
+              titleLines,
+              {
+                yPercent: 110,
+                opacity: 0,
+              },
+              {
+                yPercent: 0,
+                opacity: 1,
+                stagger: 0.08,
+
+                scrollTrigger: {
+                  trigger: card,
+                  start: 'top 78%',
+                  end: 'top 44%',
+                  scrub: 0.7,
+                },
+              }
+            )
+
+            gsap.to(image, {
+              yPercent:
+                index % 2
+                  ? 6
+                  : -6,
+
+              ease: 'none',
+
+              scrollTrigger: {
+                trigger: card,
+                start: 'top bottom',
+                end: 'bottom top',
+                scrub: true,
+              },
+            })
+
+            const enter = () => {
+              gsap.to(image, {
+                scale: 1.06,
+                rotation: 1,
+                duration: 0.6,
+                ease: 'power3.out',
+                overwrite: true,
+              })
+
+              gsap.to(arrow, {
+                x: 8,
+                duration: 0.35,
+                ease: 'power3.out',
+              })
+            }
+
+            const leave = () => {
+              gsap.to(image, {
+                scale: 1,
+                rotation: 0,
+                duration: 0.7,
+                ease: 'power3.out',
+                overwrite: true,
+              })
+
+              gsap.to(arrow, {
+                x: 0,
+                duration: 0.4,
+                ease: 'power3.out',
+              })
+            }
+
+            card.addEventListener(
+              'mouseenter',
+              enter
+            )
+
+            card.addEventListener(
+              'mouseleave',
+              leave
+            )
+
+            card._cleanupServiceHover =
+              () => {
+                card.removeEventListener(
+                  'mouseenter',
+                  enter
+                )
+
+                card.removeEventListener(
+                  'mouseleave',
+                  leave
+                )
+              }
+          }
+        )
+      }
+    )
+
+    /*
+     * MOBILE
+     */
+
+    mm.add(
+      '(max-width: 1023px)',
+      () => {
+        gsap.fromTo(
+          servicesIntroTitleRef.current,
+          {
+            y: 60,
+            opacity: 0,
+          },
+          {
+            y: 0,
+            opacity: 1,
+
+            scrollTrigger: {
+              trigger:
+                servicesIntroTitleRef.current,
+              start: 'top 88%',
+              end: 'top 58%',
+              scrub: 0.7,
+            },
+          }
+        )
+
+        gsap.fromTo(
+          servicesIntroCopyRef.current,
+          {
+            y: 35,
+            opacity: 0,
+          },
+          {
+            y: 0,
+            opacity: 1,
+
+            scrollTrigger: {
+              trigger:
+                servicesIntroCopyRef.current,
+              start: 'top 92%',
+              end: 'top 64%',
+              scrub: 0.7,
+            },
+          }
+        )
+
+        cards.forEach((card) => {
+          const image =
+            card.querySelector(
+              '.service-image'
+            )
+
+          gsap.fromTo(
+            card,
+            {
+              y: 45,
+              opacity: 0,
+            },
+            {
+              y: 0,
+              opacity: 1,
+
+              scrollTrigger: {
+                trigger: card,
+                start: 'top 92%',
+                end: 'top 68%',
+                scrub: 0.6,
+              },
+            }
+          )
+
+          gsap.fromTo(
+            image,
+            {
+              clipPath:
+                'inset(0 100% 0 0)',
+            },
+            {
+              clipPath:
+                'inset(0 0% 0 0%)',
+
+              scrollTrigger: {
+                trigger: card,
+                start: 'top 88%',
+                end: 'top 65%',
+                scrub: 0.6,
+              },
+            }
+          )
+        })
+      }
+    )
+
+    return () => {
+      cards.forEach((card) => {
+        card._cleanupServiceHover?.()
+      })
+
+      mm.revert()
+    }
+  }, [])
+
+  /*
+   * =========================================================
+   * TEAM IMAGE
+   *
+   * PRESERVED
+   * =========================================================
+   */
 
   const showTeamImage = (index) => {
     const container =
@@ -486,7 +2104,13 @@ const About = () => {
     const imageB =
       page2Image2Ref.current
 
-    if (!container || !imageA || !imageB) return
+    if (
+      !container ||
+      !imageA ||
+      !imageB
+    ) {
+      return
+    }
 
     const currentImage =
       activeImageRef.current === 0
@@ -507,28 +2131,24 @@ const About = () => {
       nextImage,
     ])
 
-    // -------------------------------------------------------
-    // FIRST HOVER
-    // -------------------------------------------------------
-
     if (activePerson === null) {
       gsap.set(container, {
         autoAlpha: 1,
-        scale: 0.88,
+        scale: 0.8,
       })
 
       gsap.set(nextImage, {
         opacity: 0,
-        scale: 1.15,
+        scale: 1.2,
         x: 70,
-        y: 30,
-        rotate: 4,
+        y: 40,
+        rotation: 4,
       })
 
       gsap.to(container, {
         scale: 1,
         duration: 0.45,
-        ease: 'power3.out',
+        ease: 'power4.out',
       })
 
       gsap.to(nextImage, {
@@ -536,30 +2156,26 @@ const About = () => {
         scale: 1,
         x: 0,
         y: 0,
-        rotate: 0,
-        duration: 0.8,
+        rotation: 0,
+        duration: 0.7,
         ease: 'power4.out',
       })
     } else {
-      // -----------------------------------------------------
-      // CHANGE TEAM IMAGE
-      // -----------------------------------------------------
-
       gsap.set(nextImage, {
         opacity: 0,
-        scale: 1.12,
+        scale: 1.15,
         x: 60,
-        y: 25,
-        rotate: 3,
+        y: 30,
+        rotation: 4,
       })
 
       gsap.to(currentImage, {
         opacity: 0,
-        scale: 0.94,
+        scale: 0.92,
         x: -40,
         y: -20,
-        rotate: -3,
-        duration: 0.5,
+        rotation: -3,
+        duration: 0.4,
         ease: 'power3.inOut',
       })
 
@@ -568,8 +2184,8 @@ const About = () => {
         scale: 1,
         x: 0,
         y: 0,
-        rotate: 0,
-        duration: 0.8,
+        rotation: 0,
+        duration: 0.7,
         ease: 'power4.out',
       })
     }
@@ -582,9 +2198,11 @@ const About = () => {
     setActivePerson(index)
   }
 
-  // =========================================================
-  // HIDE TEAM IMAGE
-  // =========================================================
+  /*
+   * =========================================================
+   * HIDE TEAM IMAGE
+   * =========================================================
+   */
 
   const hideTeamImage = () => {
     const container =
@@ -596,7 +2214,7 @@ const About = () => {
 
     gsap.to(container, {
       autoAlpha: 0,
-      scale: 0.92,
+      scale: 0.9,
       duration: 0.3,
       ease: 'power3.out',
     })
@@ -604,837 +2222,1387 @@ const About = () => {
     setActivePerson(null)
   }
 
-  // =========================================================
-  // JSX
-  // =========================================================
+  /*
+   * =========================================================
+   * JSX
+   * =========================================================
+   */
 
   return (
-    <div className="parent w-full">
+    <div className="w-full overflow-x-hidden bg-white text-black">
 
       {/* =====================================================
-          =====================================================
           PAGE 1
-          =====================================================
-          ===================================================== */}
+      ===================================================== */}
 
-      <div
+      <section
         ref={page1Ref}
-        id="page1"
         className="
           relative
-          min-h-[180vh]
-          text-black
-          overflow-visible
+          min-h-[170vh]
+          bg-white
+          font-[font2]
+
+          lg:min-h-[190vh]
         "
       >
 
         {/* ===================================================
-            WHITE BACKGROUND
-
-            z-0
+            IMAGE STAGE
         =================================================== */}
 
         <div
+          ref={heroStageRef}
           className="
-            absolute
-            inset-0
-            z-0
-            bg-white
-            pointer-events-none
-          "
-        />
-
-        {/* ===================================================
-            PAGE 1 IMAGE
-
+            sticky
+            top-[15vh]
             z-10
 
-            IMPORTANT:
+            ml-[7vw]
 
-            This is INSIDE page1.
-
-            It is NOT fixed.
-
-            GSAP pins this element.
-
-            Therefore:
-            - it stays in viewport
-            - text scrolls
-            - image does not scroll with text
-            - white background stays behind it
-            - text stays above it
-        =================================================== */}
-
-        <div
-          ref={page1ImageContainerRef}
-          className="
-            absolute
-            z-[10]
+            h-[60vw]
+            w-[86vw]
 
             overflow-hidden
+            rounded-[1.25rem]
 
-            rounded-xl
-            lg:rounded-3xl
+            bg-black
 
-            pointer-events-none
+            lg:top-[25vh]
+            lg:ml-[56vw]
+            lg:h-[72vh]
+            lg:w-[32vw]
+            lg:rounded-[2rem]
+          "
+        >
 
-            left-[8vw]
-            top-[50vh]
+          <img
+            ref={heroImageRef}
+            src={image1}
+            alt="Innovex Automation"
+            draggable="false"
+            className="
+              absolute
+              inset-[-6%]
+              h-[112%]
+              w-[112%]
+              object-cover
+              will-change-transform
+            "
+          />
 
-            -translate-y-1/2
+          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/10" />
 
-            w-[35vw]
-            h-[25vw]
+          <div
+            className="
+              absolute
+              bottom-5
+              left-5
+              text-[9px]
+              uppercase
+              tracking-[0.2em]
+              text-white
+            "
+          >
+            FRAME <span>01</span>
+          </div>
+
+          <div
+            ref={heroLabelRef}
+            className="
+              absolute
+              right-5
+              top-5
+              text-right
+              text-[8px]
+              uppercase
+              tracking-[0.18em]
+              text-white/80
+            "
+          >
+            CONTROL / AUTOMATION
+          </div>
+
+        </div>
+
+        {/* ===================================================
+            STATIC HERO TITLE
+
+            DO NOT ANIMATE
+        =================================================== */}
+
+        <div
+          className="
+            absolute
+            left-[4vw]
+            top-[30vh]
+            z-20
+            w-[92vw]
+          "
+        >
+
+          <div
+            className="
+              mb-4
+              text-[8px]
+              uppercase
+              tracking-[0.2em]
+
+              lg:text-xs
+            "
+          >
+            Industrial systems / electrical / energy
+          </div>
+
+          <h1
+            className="
+              text-[18vw]
+              uppercase
+              leading-[0.76]
+              tracking-[-0.08em]
+
+              lg:text-[10vw]
+            "
+          >
+            INNOVEX
+            <br />
+
+            <span className="ml-[6vw]">
+              AUTO
+            </span>
+
+            <br />
+
+            <span className="ml-[12vw]">
+              MATION
+            </span>
+          </h1>
+
+        </div>
+
+        {/* ===================================================
+            ABOUT / 001
+        =================================================== */}
+
+        <div
+          ref={heroCopyRef}
+          className="
+            absolute
+            left-[7vw]
+            top-[62vh]
+            z-20
+            w-[86vw]
+            max-w-[700px]
+
+            border-l-4
+            border-sky-300
+
+            bg-white
+
+            p-5
+
+            shadow-[10px_10px_0_rgba(125,211,252,0.18)]
 
             lg:left-[7vw]
-            lg:w-[25vw]
-            lg:h-[30vw]
-          "
-        >
-
-          {/* IMAGE A */}
-
-          <img
-            ref={page1Image1Ref}
-            src={page1Images[0]}
-            alt=""
-            draggable="false"
-            className="
-              absolute
-              inset-0
-              w-full
-              h-full
-              object-cover
-              block
-            "
-          />
-
-          {/* IMAGE B */}
-
-          <img
-            ref={page1Image2Ref}
-            src={page1Images[1]}
-            alt=""
-            draggable="false"
-            className="
-              absolute
-              inset-0
-              w-full
-              h-full
-              object-cover
-              block
-            "
-          />
-
-        </div>
-
-        {/* ===================================================
-            PAGE 1 TEXT
-
-            z-20
-
-            ABOVE IMAGE
-        =================================================== */}
-
-        <div
-          className="
-            relative
-            z-[20]
-            font-[font2]
+            lg:top-[146vh]
+            lg:w-[46vw]
+            lg:p-7
           "
         >
 
           {/* =================================================
-              TITLE
+              ABOUT META
           ================================================= */}
 
           <div
+            ref={aboutMetaRef}
             className="
               relative
-              z-[20]
-
-              lg:pt-[65vh]
-              pt-[35vh]
-            "
-          >
-
-            <h1
-              className="
-                relative
-                z-[20]
-
-                text-[14vw]
-                text-center
-                uppercase
-                leading-[18vw]
-
-                bg-transparent
-              "
-            >
-              INNOVEX
-              <br />
-              AUTOMATION
-            </h1>
-
-          </div>
-
-          {/* =================================================
-              DESCRIPTION
-          ================================================= */}
-
-          <div
-            className="
-              relative
-              z-[20]
-
-              lg:pl-[40%]
-              lg:mt-20
-              mt-4
-
-              p-3
-              pb-[70vh]
-
-              bg-transparent
-            "
-          >
-
-            <p
-              className="
-                relative
-                z-[20]
-
-                lg:text-6xl
-                text-xl
-                leading-tight
-
-                bg-transparent
-              "
-            >
-
-              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-
-              Innovex Automation (IA) is a leading engineering
-              company in Rajasthan, we specializing in{' '}
-
-              <span className="bg-sky-300 px-2 py-1">
-                Industrial Automation
-              </span>
-
-              ,{' '}
-
-              <span className="bg-sky-300 px-2 py-1">
-                Electrical Solutions
-              </span>
-
-              ,{' '}
-
-              <span className="bg-sky-300 px-2 py-1">
-                Solar Energy
-              </span>
-
-              .
-
-              Based in{' '}
-
-              <span className="bg-gray-300 px-2 py-1">
-                Sikar
-              </span>
-
-              , with branches in{' '}
-
-              <span className="bg-gray-300 px-2 py-1">
-                Churu
-              </span>
-
-              and{' '}
-
-              <span className="bg-gray-300 px-2 py-1">
-                Fatehpur
-              </span>
-
-              , we delivering complete solutions from project
-              design and installation to commissioning,
-              maintenance, & technical support.
-
-            </p>
-
-          </div>
-
-        </div>
-
-      </div>
-
-      {/* =====================================================
-          =====================================================
-          PAGE 2
-          =====================================================
-          ===================================================== */}
-
-      <div
-        ref={page2Ref}
-        id="page2"
-        className="
-          relative
-          z-30
-          min-h-[400vh]
-          bg-white
-          text-black
-          font-[font2]
-        "
-      >
-
-        {/* ===================================================
-            EXPERIENCE
-        =================================================== */}
-
-        <section
-          className="
-            pt-[18vh]
-            pb-[18vh]
-            px-5
-            lg:px-10
-          "
-        >
-
-          <div
-            className="
-              flex
-              flex-col
-              lg:flex-row
-              justify-between
-              gap-12
-            "
-          >
-
-            <div className="lg:w-[48%]">
-
-              <p
-                className="
-                  text-sm
-                  lg:text-lg
-                  uppercase
-                  tracking-wider
-                  mb-8
-                "
-              >
-                Our Experience
-              </p>
-
-              <h2
-                className="
-                  text-[13vw]
-                  lg:text-[8vw]
-                  uppercase
-                  leading-[0.82]
-                "
-              >
-                BUILT
-                <br />
-                BY
-                <br />
-                EXPERIENCE
-              </h2>
-
-            </div>
-
-            <div
-              className="
-                lg:w-[42%]
-                lg:pt-[12vh]
-              "
-            >
-
-              <p
-                className="
-                  text-xl
-                  lg:text-4xl
-                  leading-tight
-                "
-              >
-                Engineering solutions built through{' '}
-
-                <span
-                  className="
-                    bg-sky-300
-                    px-2
-                    py-1
-                    mx-1
-                  "
-                >
-                  practical experience
-                </span>
-
-                , technical expertise and a deep understanding
-                of real-world industrial requirements.
-              </p>
-
-              <p
-                className="
-                  text-base
-                  lg:text-xl
-                  leading-relaxed
-                  mt-10
-                  text-black/60
-                "
-              >
-                From automation and control systems to electrical
-                infrastructure and solar energy, Innovex Automation
-                works across the complete project lifecycle —
-                from design and installation to commissioning,
-                maintenance and technical support.
-              </p>
-
-            </div>
-
-          </div>
-
-          {/* =================================================
-              NUMBERS
-          ================================================= */}
-
-          <div
-            className="
-              grid
-              grid-cols-2
-              lg:grid-cols-4
-              mt-[15vh]
-              border-t
+              mb-5
+              overflow-hidden
+              border-y
               border-black
-            "
-          >
-
-            <div
-              className="
-                py-10
-                lg:py-14
-                border-b
-                lg:border-b-0
-                lg:border-r
-                border-black/20
-              "
-            >
-
-              <div
-                className="
-                  text-[15vw]
-                  lg:text-[7vw]
-                  leading-none
-                "
-              >
-                10+
-              </div>
-
-              <p
-                className="
-                  text-sm
-                  lg:text-lg
-                  uppercase
-                  mt-5
-                "
-              >
-                Years Experience
-              </p>
-
-            </div>
-
-            <div
-              className="
-                py-10
-                lg:py-14
-                border-b
-                lg:border-b-0
-                lg:border-r
-                border-black/20
-                lg:pl-8
-              "
-            >
-
-              <div
-                className="
-                  text-[15vw]
-                  lg:text-[7vw]
-                  leading-none
-                "
-              >
-                100+
-              </div>
-
-              <p
-                className="
-                  text-sm
-                  lg:text-lg
-                  uppercase
-                  mt-5
-                "
-              >
-                Projects Delivered
-              </p>
-
-            </div>
-
-            <div
-              className="
-                py-10
-                lg:py-14
-                border-b
-                lg:border-b-0
-                lg:border-r
-                border-black/20
-                lg:pl-8
-              "
-            >
-
-              <div
-                className="
-                  text-[15vw]
-                  lg:text-[7vw]
-                  leading-none
-                "
-              >
-                3
-              </div>
-
-              <p
-                className="
-                  text-sm
-                  lg:text-lg
-                  uppercase
-                  mt-5
-                "
-              >
-                Locations
-              </p>
-
-            </div>
-
-            <div
-              className="
-                py-10
-                lg:py-14
-                lg:pl-8
-              "
-            >
-
-              <div
-                className="
-                  text-[15vw]
-                  lg:text-[7vw]
-                  leading-none
-                "
-              >
-                24/7
-              </div>
-
-              <p
-                className="
-                  text-sm
-                  lg:text-lg
-                  uppercase
-                  mt-5
-                "
-              >
-                Technical Support
-              </p>
-
-            </div>
-
-          </div>
-
-        </section>
-
-        {/* ===================================================
-            ENGINEERING STATEMENT
-        =================================================== */}
-
-        <section
-          className="
-            px-5
-            lg:px-10
-            pb-[18vh]
-          "
-        >
-
-          <div
-            className="
-              border-t
-              border-black
-              pt-8
-            "
-          >
-
-            <div
-              className="
-                flex
-                flex-col
-                lg:flex-row
-                justify-between
-                gap-10
-              "
-            >
-
-              <p
-                className="
-                  text-sm
-                  uppercase
-                  lg:w-[25%]
-                "
-              >
-                What We Do
-              </p>
-
-              <p
-                className="
-                  text-3xl
-                  lg:text-[5vw]
-                  leading-[0.95]
-                  lg:w-[70%]
-                "
-              >
-                WE TURN ENGINEERING
-                <br />
-                CHALLENGES INTO
-                <br />
-
-                <span
-                  className="
-                    bg-black
-                    text-white
-                    px-2
-                  "
-                >
-                  WORKING SOLUTIONS.
-                </span>
-
-              </p>
-
-            </div>
-
-          </div>
-
-        </section>
-
-        {/* ===================================================
-            OUR TEAM
-        =================================================== */}
-
-        <div
-          className="
-            pt-[8vh]
-            pb-[15vh]
-            px-5
-            lg:px-10
-          "
-        >
-
-          <h2
-            className="
-              text-[11vw]
-              lg:text-[8vw]
-              uppercase
-              leading-none
-            "
-          >
-            OUR TEAM
-          </h2>
-
-        </div>
-
-        {/* ===================================================
-            TEAM LIST
-        =================================================== */}
-
-        <div className="relative z-20">
-
-          {teamMembers.map((member, index) => (
-
-            <div
-              key={member.name}
-              onMouseEnter={() =>
-                showTeamImage(index)
-              }
-              onMouseLeave={hideTeamImage}
-              className="
-                group
-                relative
-                w-full
-                h-[13vh]
-                lg:h-[15vh]
-                flex
-                items-center
-                border-b
-                border-black/20
-                cursor-pointer
-                overflow-hidden
-              "
-            >
-
-              <div
-                className="
-                  absolute
-                  inset-0
-                  bg-black
-                  translate-y-full
-                  group-hover:translate-y-0
-                  transition-transform
-                  duration-700
-                  ease-[cubic-bezier(0.22,1,0.36,1)]
-                "
-              />
-
-              <div
-                className="
-                  relative
-                  z-10
-                  w-[35%]
-                  px-5
-                  lg:px-10
-                  text-xs
-                  lg:text-lg
-                  group-hover:text-white
-                  transition-colors
-                  duration-500
-                "
-              >
-                {member.designation}
-              </div>
-
-              <div
-                className="
-                  relative
-                  z-10
-                  w-[65%]
-                  px-5
-                  lg:px-10
-                  text-right
-                  text-[7vw]
-                  lg:text-[5vw]
-                  leading-none
-                  uppercase
-                  whitespace-nowrap
-                  group-hover:text-white
-                  transition-colors
-                  duration-500
-                "
-              >
-                {member.name}
-              </div>
-
-            </div>
-
-          ))}
-
-        </div>
-
-        {/* ===================================================
-            SPACE
-        =================================================== */}
-
-        <div className="h-[35vh]" />
-
-        {/* ===================================================
-            FOOTER
-        =================================================== */}
-
-        <div
-          className="
-            font-[font2]
-            flex
-            items-center
-            justify-end
-            gap-1
-            sm:gap-2
-            px-2
-            pb-8
-          "
-        >
-
-          <div
-            className="
-              border
-              border-black
-              text-black
-              h-10
-              sm:h-12
-              flex
-              items-center
-              pt-1
-              px-3
-              sm:px-4
-              lg:px-5
-              rounded-full
-              uppercase
-              transition-all
-              duration-300
+              py-3
+              font-[font1]
             "
           >
 
             <span
               className="
-                text-[12px]
-                sm:text-sm
+                about-meta-sweep
+                absolute
+                left-0
+                top-0
+                h-px
+                w-full
+                origin-left
+                bg-sky-300
+              "
+            />
+
+            <div
+              className="
+                flex
+                items-start
+                justify-between
+                gap-5
+                text-[10px]
+                font-semibold
+                uppercase
+                tracking-[0.18em]
+
+                sm:text-[11px]
+
                 lg:text-base
               "
             >
-              © {new Date().getFullYear()} Innovex Automation
+
+              <span className="about-meta-row">
+                About / 001
+              </span>
+
+              <div
+                className="
+                  about-meta-row
+                  text-right
+                  leading-relaxed
+                "
+              >
+
+                <div>
+                  Since 2019
+                </div>
+
+                <div
+                  className="
+                    mt-2
+                    text-[9px]
+                    font-normal
+                    tracking-[0.12em]
+                    text-black/65
+
+                    sm:text-[10px]
+
+                    lg:text-xs
+                  "
+                >
+                  Sikar / Jaipur /
+                  <br className="sm:hidden" />
+                  {' '}Churu / Fatehpur
+                </div>
+
+              </div>
+
+            </div>
+
+          </div>
+
+          {/* =================================================
+              ABOUT STATEMENT
+          ================================================= */}
+
+          <p
+            ref={heroStatementRef}
+            className="
+              relative
+              font-[font1]
+              text-[6vw]
+              leading-[0.98]
+              tracking-[-0.02em]
+              text-black
+
+              sm:text-[5.3vw]
+
+              lg:text-[3.1vw]
+            "
+          >
+
+            We design and build{' '}
+
+            <span
+              className="
+                about-highlight
+                mx-1
+                inline-block
+                origin-left
+                bg-sky-300
+                px-2
+                py-1
+                text-black
+              "
+            >
+              industrial systems
+            </span>
+
+            {' '}
+            connecting machines,
+            energy and intelligence.
+
+            <br />
+
+            <span
+              className="
+                about-subline
+                mt-3
+                block
+                border-t
+                border-black/15
+                pt-3
+                text-[0.62em]
+                tracking-[0.03em]
+                text-black/55
+              "
+            >
+              Automation.{' '}
+              Electrical.{' '}
+              Solar.{' '}
+              Engineering.
+            </span>
+
+          </p>
+
+        </div>
+
+        {/* ===================================================
+            PROGRESS
+        =================================================== */}
+
+        <div
+          className="
+            absolute
+            left-[7vw]
+            top-[115vh]
+            z-30
+            w-[86vw]
+
+            lg:left-[7vw]
+            lg:top-[96vh]
+            lg:w-[38vw]
+          "
+        >
+
+          <div
+            className="
+              mb-2
+              flex
+              justify-between
+              text-[8px]
+              uppercase
+              tracking-[0.2em]
+            "
+          >
+
+            <span>
+              Scroll / Explore
+            </span>
+
+            <span ref={heroCounterRef}>
+              01 / 07
             </span>
 
           </div>
 
           <div
             className="
-              border
-              border-black
-              hover:border-black
-              hover:text-white
-              hover:bg-black
-              h-10
-              sm:h-12
-              lg:h-20
-              flex
-              items-center
-              pt-1
-              px-3
-              sm:px-4
-              lg:px-5
-              rounded-full
-              uppercase
-              transition-all
-              duration-300
+              h-[2px]
+              w-full
+              bg-black/15
             "
           >
 
-            <Link
+            <div
+              ref={heroProgressRef}
               className="
-                text-[15px]
-                sm:text-base
-                lg:text-[5vw]
+                h-full
+                w-full
+                origin-left
+                scale-x-0
+                bg-black
               "
-              to="/contact"
-            >
-              Contact
-            </Link>
+            />
 
           </div>
 
         </div>
 
-      </div>
+      </section>
 
       {/* =====================================================
-          PAGE 2 TEAM IMAGE
-          ORIGINAL SYSTEM PRESERVED
+          EXPERIENCE / 002
+      ===================================================== */}
+
+      <section
+        ref={experienceRef}
+        className="
+          relative
+          z-20
+          bg-white
+          px-5
+          py-[15vh]
+          font-[font2]
+
+          lg:px-10
+          lg:py-[20vh]
+        "
+      >
+
+        <div
+          className="
+            border-t
+            border-black
+            pt-5
+          "
+        >
+
+          <div
+            className="
+              grid
+              gap-16
+
+              lg:grid-cols-2
+            "
+          >
+
+            {/* =================================================
+                EXPERIENCE TITLE
+            ================================================= */}
+
+            <div>
+
+              <div
+                className="
+                  experience-meta
+                  mb-8
+                  flex
+                  justify-between
+                  text-[8px]
+                  uppercase
+                  tracking-[0.2em]
+
+                  lg:text-xs
+                "
+              >
+
+                <span className="experience-index">
+                  002 / Experience
+                </span>
+
+                <span className="experience-status">
+                  Field tested
+                </span>
+
+              </div>
+
+              <h2
+                ref={experienceTitleRef}
+                className="
+                  text-[18vw]
+                  uppercase
+                  leading-[0.76]
+                  tracking-[-0.08em]
+
+                  lg:text-[10vw]
+                "
+              >
+                BUILT
+                <br />
+                FOR
+                <br />
+                REAL
+                <br />
+                WORLD
+              </h2>
+
+            </div>
+
+            {/* =================================================
+                EXPERIENCE COPY
+            ================================================= */}
+
+            <div
+              ref={experienceCopyRef}
+              className="
+                lg:flex
+                lg:items-end
+              "
+            >
+
+              <div>
+
+                <p
+                  className="
+                    experience-lead
+                    text-[8vw]
+                    leading-[0.9]
+                    tracking-[-0.05em]
+
+                    lg:text-[4vw]
+                  "
+                >
+                  Engineering isn't only about
+                  making something work.
+
+                  <span
+                    className="
+                      experience-highlight
+                      mx-1
+                      inline-block
+                      origin-left
+                      bg-black
+                      px-2
+                      text-white
+                    "
+                  >
+                    It's making it work reliably.
+                  </span>
+                </p>
+
+                <p
+                  className="
+                    experience-body
+                    mt-8
+                    max-w-[600px]
+                    text-base
+                    leading-relaxed
+                    text-black/55
+
+                    lg:text-xl
+                  "
+                >
+                  Innovex Automation combines
+                  industrial automation,
+                  electrical engineering and
+                  solar energy into one complete
+                  project workflow.
+
+                  From design and installation
+                  to commissioning, maintenance
+                  and technical support, our
+                  focus remains the same —
+                  systems that perform in
+                  real-world conditions.
+                </p>
+
+              </div>
+
+            </div>
+
+          </div>
+
+          {/* =================================================
+              STATS
+          ================================================= */}
+
+          <div
+            className="
+              mt-[15vh]
+              grid
+              grid-cols-2
+              border-t
+              border-black
+
+              lg:grid-cols-4
+            "
+          >
+
+            {[
+              ['07+', 'Years operating'],
+              ['100+', 'Projects delivered'],
+              ['04', 'Regional offices'],
+              ['24/7', 'Technical support'],
+            ].map(
+              ([number, label], index) => (
+                <div
+                  key={label}
+                  ref={(el) => {
+                    statRefs.current[index] =
+                      el
+                  }}
+                  className="
+                    min-h-[220px]
+                    border-b
+                    border-black/20
+                    py-8
+
+                    lg:min-h-[320px]
+                    lg:border-b-0
+                    lg:border-r
+                    lg:px-7
+                    lg:py-10
+                  "
+                >
+
+                  <div
+                    className="
+                      experience-stat-number
+                      text-[18vw]
+                      leading-[0.8]
+                      tracking-[-0.08em]
+
+                      lg:text-[7vw]
+                    "
+                  >
+                    {number}
+                  </div>
+
+                  <div
+                    className="
+                      experience-stat-label
+                      mt-7
+                      max-w-[150px]
+                      text-[9px]
+                      uppercase
+                      leading-relaxed
+                      tracking-[0.14em]
+                      text-black/50
+
+                      lg:text-sm
+                    "
+                  >
+                    {label}
+                  </div>
+
+                </div>
+              )
+            )}
+
+          </div>
+
+        </div>
+
+      </section>
+
+      {/* =====================================================
+          PHILOSOPHY
+      ===================================================== */}
+
+      <section
+        ref={philosophyRef}
+        className="
+          relative
+          z-20
+          bg-black
+          px-5
+          py-[18vh]
+          font-[font2]
+          text-white
+
+          lg:px-10
+        "
+      >
+
+        <div
+          className="
+            grid
+            gap-10
+
+            lg:grid-cols-[25%_75%]
+          "
+        >
+
+          <div
+            ref={philosophyLabelRef}
+            className="
+              text-[9px]
+              uppercase
+              tracking-[0.2em]
+              text-white/40
+
+              lg:text-xs
+            "
+          >
+            Engineering philosophy
+          </div>
+
+          <div
+            ref={philosophyTitleRef}
+            className="
+              text-[12vw]
+              uppercase
+              leading-[0.8]
+              tracking-[-0.08em]
+
+              lg:text-[7vw]
+            "
+          >
+
+            <span className="philosophy-line block">
+              DON'T JUST
+            </span>
+
+            <span className="philosophy-line block">
+              CONNECT
+            </span>
+
+            <span
+              className="
+                philosophy-line
+                philosophy-highlight
+                block
+                text-sky-300
+              "
+            >
+              SYSTEMS.
+            </span>
+
+            <span className="philosophy-line block">
+              MAKE THEM
+            </span>
+
+            <span
+              className="
+                philosophy-line
+                block
+                text-white/30
+              "
+            >
+              WORK TOGETHER.
+            </span>
+
+          </div>
+
+        </div>
+
+      </section>
+
+      {/* =====================================================
+          WHAT WE DO
+      ===================================================== */}
+
+      <section
+        ref={servicesRef}
+        className="
+          relative
+          z-20
+          overflow-clip
+          bg-white
+          font-[font2]
+          text-black
+        "
+      >
+
+        <div
+          ref={servicesTrackRef}
+          className="
+            relative
+            w-full
+          "
+        >
+
+          {/* =================================================
+              SERVICES INTRO
+          ================================================= */}
+
+          <div
+            className="
+              grid
+              min-h-[78vh]
+              w-full
+              justify-between
+              gap-12
+              border-r
+              border-black
+              p-5
+
+              lg:min-h-[72vh]
+              lg:grid-cols-[65%_35%]
+              lg:gap-0
+              lg:p-10
+            "
+          >
+
+            <div
+              className="
+                col-span-full
+                flex
+                justify-between
+                text-[8px]
+                uppercase
+                tracking-[0.2em]
+
+                lg:text-xs
+              "
+            >
+
+              <span>
+                003 / What we do
+              </span>
+
+              <span>
+                01—04
+              </span>
+
+            </div>
+
+            <h2
+              ref={servicesIntroTitleRef}
+              className="
+                text-[17vw]
+                uppercase
+                leading-[0.75]
+                tracking-[-0.08em]
+
+                lg:text-[9vw]
+              "
+            >
+              IDEAS
+              <br />
+              INTO
+              <br />
+
+              <span
+                className="
+                  bg-black
+                  px-2
+                  text-white
+                "
+              >
+                SYSTEMS.
+              </span>
+            </h2>
+
+            <p
+              ref={servicesIntroCopyRef}
+              className="
+                max-w-[400px]
+                self-end
+                text-[9px]
+                uppercase
+                leading-relaxed
+                tracking-[0.15em]
+                text-black/50
+
+                lg:mb-2
+                lg:pr-8
+                lg:text-sm
+              "
+            >
+              One engineering workflow from
+              first concept to final
+              commissioning.
+            </p>
+
+          </div>
+
+          {/* =================================================
+              SERVICE CARDS
+          ================================================= */}
+
+          {services.map(
+            (service, index) => (
+              <article
+                key={service.number}
+                className={`
+                  service-card
+                  relative
+                  grid
+                  min-h-[90vh]
+                  w-full
+                  gap-8
+                  overflow-hidden
+                  border-t
+                  border-black
+                  p-5
+                  ${service.tone}
+
+                  lg:min-h-[78vh]
+                  lg:grid-cols-[18%_47%_35%]
+                  lg:items-center
+                  lg:gap-0
+                  lg:p-10
+                `}
+              >
+
+                <div
+                  className="
+                    service-number
+                    self-start
+                    text-[16vw]
+                    leading-[0.75]
+                    tracking-[-0.08em]
+
+                    lg:text-[11vw]
+                  "
+                >
+                  {service.number}
+                </div>
+
+                <div
+                  className="
+                    relative
+                    z-10
+                    flex
+                    flex-col
+                    justify-center
+                  "
+                >
+
+                  <div
+                    className="
+                      mb-4
+                      flex
+                      items-center
+                      justify-between
+                      border-t
+                      border-current/30
+                      pt-3
+                      text-[8px]
+                      uppercase
+                      tracking-[0.18em]
+
+                      lg:mr-10
+                      lg:text-xs
+                    "
+                  >
+
+                    <span>
+                      {service.title}
+                    </span>
+
+                    <span>
+                      0{index + 1} / 04
+                    </span>
+
+                  </div>
+
+                  <div
+                    className="
+                      mb-7
+                      aspect-[1.35]
+                      overflow-hidden
+                      bg-black
+                    "
+                  >
+
+                    <img
+                      src={service.image}
+                      alt={service.title}
+                      className="
+                        service-image
+                        h-full
+                        w-full
+                        object-cover
+                        will-change-transform
+                      "
+                    />
+
+                  </div>
+
+                  <h3
+                    className="
+                      overflow-hidden
+                      text-[15vw]
+                      uppercase
+                      leading-[0.75]
+                      tracking-[-0.08em]
+
+                      lg:text-[6vw]
+                    "
+                  >
+
+                    {service.displayTitle
+                      .split(' ')
+                      .map((word) => (
+                        <span
+                          key={word}
+                          className="
+                            service-title-line
+                            block
+                          "
+                        >
+                          {word}
+                        </span>
+                      ))}
+
+                  </h3>
+
+                </div>
+
+                <div
+                  className="
+                    service-details
+                    flex
+                    flex-col
+                    justify-end
+
+                    lg:pl-14
+                  "
+                >
+
+                  <div
+                    className="
+                      mb-8
+                      border-t
+                      border-current/30
+                      pt-3
+                      text-[9px]
+                      uppercase
+                      tracking-[0.16em]
+                      opacity-60
+
+                      lg:text-xs
+                    "
+                  >
+                    {service.metadata}
+                  </div>
+
+                  <p
+                    className="
+                      max-w-sm
+                      text-xl
+                      leading-[1.05]
+                      tracking-[-0.03em]
+
+                      lg:text-[2vw]
+                    "
+                  >
+                    {service.description}
+                  </p>
+
+                  <Link
+                    to="/contact"
+                    className="
+                      group
+                      mt-10
+                      flex
+                      w-fit
+                      items-center
+                      gap-4
+                      border-b
+                      border-current
+                      pb-2
+                      text-[9px]
+                      uppercase
+                      tracking-[0.18em]
+
+                      lg:text-xs
+                    "
+                  >
+                    Discuss a project
+
+                    <span
+                      className="
+                        service-arrow
+                        text-xl
+                        leading-none
+                        transition-transform
+                      "
+                    >
+                      ↗
+                    </span>
+                  </Link>
+
+                </div>
+
+              </article>
+            )
+          )}
+
+          {/* =================================================
+              END
+          ================================================= */}
+
+          <div
+            className="
+              flex
+              min-h-[55vh]
+              w-full
+              items-center
+              justify-center
+              bg-white
+
+              lg:min-h-[65vh]
+            "
+          >
+
+            <div
+              className="
+                text-center
+                text-[12vw]
+                uppercase
+                leading-[0.8]
+                tracking-[-0.08em]
+
+                lg:text-[6vw]
+              "
+            >
+              ONE
+              <br />
+              TEAM.
+              <br />
+
+              <span
+                className="
+                  bg-black
+                  px-2
+                  text-white
+                "
+              >
+                ONE
+              </span>
+
+              <br />
+
+              SYSTEM.
+            </div>
+
+          </div>
+
+        </div>
+
+      </section>
+
+      {/* =====================================================
+          TEAM
+      ===================================================== */}
+
+      <section
+        className="
+          relative
+          z-30
+          bg-white
+          font-[font2]
+        "
+      >
+
+        <div
+          className="
+            px-5
+            pb-[15vh]
+            pt-[18vh]
+
+            lg:px-10
+          "
+        >
+
+          <div
+            className="
+              mb-8
+              flex
+              justify-between
+              border-t
+              border-black
+              pt-5
+              text-[8px]
+              uppercase
+              tracking-[0.2em]
+
+              lg:text-xs
+            "
+          >
+
+            <span>
+              004 / People
+            </span>
+
+            <span>
+              The team behind the systems
+            </span>
+
+          </div>
+
+          <h2
+            className="
+              text-[18vw]
+              uppercase
+              leading-[0.76]
+              tracking-[-0.08em]
+
+              lg:text-[9vw]
+            "
+          >
+            OUR
+            <br />
+
+            <span className="ml-[10vw]">
+              TEAM
+            </span>
+
+          </h2>
+
+        </div>
+
+        <div
+          className="
+            relative
+            z-20
+          "
+        >
+
+          {teamMembers.map(
+            (member, index) => (
+              <div
+                key={member.name}
+                onMouseEnter={() =>
+                  showTeamImage(index)
+                }
+                onMouseLeave={
+                  hideTeamImage
+                }
+                className="
+                  group
+                  relative
+                  flex
+                  h-[12vh]
+                  w-full
+                  cursor-pointer
+                  items-center
+                  overflow-hidden
+                  border-b
+                  border-black/20
+
+                  lg:h-[15vh]
+                "
+              >
+
+                <div
+                  className="
+                    absolute
+                    inset-0
+                    translate-y-full
+                    bg-black
+                    transition-transform
+                    duration-700
+                    ease-[cubic-bezier(0.22,1,0.36,1)]
+                    group-hover:translate-y-0
+                  "
+                />
+
+                <div
+                  className="
+                    relative
+                    z-10
+                    w-[38%]
+                    px-5
+                    text-[8px]
+                    uppercase
+                    tracking-[0.08em]
+                    transition-colors
+                    duration-500
+                    group-hover:text-white
+
+                    lg:px-10
+                    lg:text-sm
+                  "
+                >
+                  {member.designation}
+                </div>
+
+                <div
+                  className="
+                    relative
+                    z-10
+                    w-[62%]
+                    whitespace-nowrap
+                    px-5
+                    text-right
+                    text-[6vw]
+                    uppercase
+                    leading-none
+                    tracking-[-0.05em]
+                    transition-colors
+                    duration-500
+                    group-hover:text-white
+
+                    lg:px-10
+                    lg:text-[5vw]
+                  "
+                >
+                  {member.name}
+                </div>
+
+              </div>
+            )
+          )}
+
+        </div>
+
+      </section>
+
+      {/* =====================================================
+          FOOTER
+      ===================================================== */}
+
+      <footer
+        className="
+          relative
+          z-30
+          flex
+          items-center
+          justify-end
+          gap-2
+          bg-white
+          px-2
+          pb-8
+          pt-10
+          font-[font2]
+        "
+      >
+
+        <div
+          className="
+            flex
+            h-10
+            items-center
+            rounded-full
+            border
+            border-black
+            px-3
+            pt-1
+            text-[10px]
+            uppercase
+
+            sm:h-12
+            sm:px-4
+            sm:text-sm
+          "
+        >
+          © {new Date().getFullYear()}
+          {' '}
+          Innovex Automation
+        </div>
+
+        <Link
+          to="/contact"
+          className="
+            flex
+            h-10
+            items-center
+            rounded-full
+            border
+            border-black
+            px-4
+            pt-1
+            text-sm
+            uppercase
+            transition-all
+            duration-300
+            hover:bg-black
+            hover:text-white
+
+            sm:h-12
+            sm:px-5
+            sm:text-base
+          "
+        >
+          Contact
+        </Link>
+
+      </footer>
+
+      {/* =====================================================
+          TEAM IMAGE PORTAL
       ===================================================== */}
 
       {typeof document !== 'undefined' &&
         createPortal(
-
           <div
             ref={page2ImageContainerRef}
             className="
+              pointer-events-none
               fixed
               inset-0
               z-[50]
-              pointer-events-none
             "
             style={{
               opacity: 0,
@@ -1447,23 +3615,23 @@ const About = () => {
                 absolute
                 left-1/2
                 top-1/2
+                h-[72vw]
+                max-h-[480px]
+                w-[55vw]
+                max-w-[360px]
                 -translate-x-1/2
                 -translate-y-1/2
                 overflow-hidden
                 rounded-3xl
                 bg-black
-                w-[55vw]
-                h-[70vw]
-                max-w-[360px]
-                max-h-[480px]
-                lg:w-[25vw]
+
                 lg:h-[34vw]
+                lg:w-[25vw]
               "
             >
 
               <img
                 ref={page2Image1Ref}
-                src={teamImages.carl}
                 alt=""
                 className="
                   absolute
@@ -1476,7 +3644,6 @@ const About = () => {
 
               <img
                 ref={page2Image2Ref}
-                src={teamImages.carl}
                 alt=""
                 className="
                   absolute
@@ -1490,7 +3657,6 @@ const About = () => {
             </div>
 
           </div>,
-
           document.body
         )}
 

@@ -9,7 +9,49 @@
 
 .moveLink{
     opacity: 0;
-    transition: all ease 0.3s;
+    transition: opacity .3s ease;
+}
+
+.page1-grid {
+    background-image: linear-gradient(rgba(0, 0, 0, .08) 1px, transparent 1px), linear-gradient(90deg, rgba(0, 0, 0, .08) 1px, transparent 1px);
+    background-size: 7vw 7vw;
+    mask-image: linear-gradient(to bottom, black, transparent 78%);
+}
+
+.page1-scanline {
+    animation: scanLine 8s ease-in-out infinite alternate;
+}
+
+.service-card {
+    transition: background-color .5s ease, color .5s ease, transform .5s cubic-bezier(.22, 1, .36, 1);
+}
+
+.service-card:hover {
+    transform: translateY(-8px);
+}
+
+.service-card::after {
+    content: '';
+    position: absolute;
+    left: 1.5rem;
+    right: 1.5rem;
+    bottom: 1.25rem;
+    height: 2px;
+    background: currentColor;
+    transform: scaleX(.18);
+    transform-origin: left;
+    transition: transform .6s cubic-bezier(.22, 1, .36, 1);
+    opacity: .35;
+}
+
+.service-card:hover::after {
+    transform: scaleX(1);
+    opacity: 1;
+}
+
+@keyframes scanLine {
+    from { transform: translateY(-18vh); }
+    to { transform: translateY(18vh); }
 }
 
 .link:hover .moveLink{

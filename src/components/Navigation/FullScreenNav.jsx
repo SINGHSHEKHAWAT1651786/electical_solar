@@ -1,18 +1,23 @@
 import { useGSAP } from '@gsap/react'
 import gsap from 'gsap'
-import React, { useContext, useRef, useState } from 'react'
+import { useContext, useRef, useState } from 'react'
+import { Link } from 'react-router-dom'
 import { NavbarContext } from '../../context/NavContext'
 import heroImage from '../../assets/hero.png'
+import marqueeImageOne from '../../assets/images/image1.jpg'
+import marqueeImageTwo from '../../assets/images/image2.jpg'
+import marqueeImageThree from '../../assets/images/image4.jpg'
+import marqueeImageFour from '../../assets/images/image7.jpg'
 
 
 // =============================================================
 // MARQUEE GROUP
 // =============================================================
 
-const MarqueeGroup = () => {
+const MarqueeGroup = ({ images }) => {
     return (
         <div
-            className="moveX flex h-full shrink-0 items-center"
+            className="flex h-full shrink-0 items-center"
             style={{
                 flexShrink: 0,
                 height: '100%',
@@ -20,104 +25,43 @@ const MarqueeGroup = () => {
             }}
         >
 
-            {/* TEXT */}
+            {images.map((image, index) => (
+                <div
+                    key={image}
+                    className="flex shrink-0 items-center"
+                >
+                    <h2
+                        className="whitespace-nowrap font-[font2] uppercase m-0 p-0"
+                        style={{
+                            fontSize: 'clamp(42px, 8vw, 120px)',
+                            lineHeight: '0.8',
+                            flexShrink: 0,
+                        }}
+                    >
+                        Pour Tout voir
+                    </h2>
 
-            <h2
-                className="
-                    whitespace-nowrap
-                    font-[font2]
-                    uppercase
-                    m-0
-                    p-0
-                "
-                style={{
-                    fontSize: 'clamp(42px, 8vw, 120px)',
-                    lineHeight: '0.8',
-                    flexShrink: 0,
-                }}
-            >
-                Pour Tout voir
-            </h2>
-
-
-            {/* IMAGE */}
-
-            <img
-                src={heroImage}
-                alt="Innovex Automation"
-                draggable="false"
-                style={{
-                    width: 'clamp(140px, 25vw, 384px)',
-                    height: 'clamp(56px, 9vw, 140px)',
-
-                    minWidth: '140px',
-                    minHeight: '56px',
-
-                    maxWidth: '384px',
-                    maxHeight: '140px',
-
-                    marginLeft: '20px',
-                    marginRight: '20px',
-
-                    borderRadius: '9999px',
-
-                    objectFit: 'cover',
-
-                    display: 'block',
-
-                    flexShrink: 0,
-                }}
-            />
-
-
-            {/* TEXT */}
-
-            <h2
-                className="
-                    whitespace-nowrap
-                    font-[font2]
-                    uppercase
-                    m-0
-                    p-0
-                "
-                style={{
-                    fontSize: 'clamp(42px, 8vw, 120px)',
-                    lineHeight: '0.8',
-                    flexShrink: 0,
-                }}
-            >
-                Pour Tout voir
-            </h2>
-
-
-            {/* IMAGE */}
-
-            <img
-                src={heroImage}
-                alt="Innovex Automation"
-                draggable="false"
-                style={{
-                    width: 'clamp(140px, 25vw, 384px)',
-                    height: 'clamp(56px, 9vw, 140px)',
-
-                    minWidth: '140px',
-                    minHeight: '56px',
-
-                    maxWidth: '384px',
-                    maxHeight: '140px',
-
-                    marginLeft: '20px',
-                    marginRight: '20px',
-
-                    borderRadius: '9999px',
-
-                    objectFit: 'cover',
-
-                    display: 'block',
-
-                    flexShrink: 0,
-                }}
-            />
+                    <img
+                        src={image}
+                        alt={`Innovex project ${index + 1}`}
+                        draggable="false"
+                        style={{
+                            width: 'clamp(140px, 25vw, 384px)',
+                            height: 'clamp(56px, 9vw, 140px)',
+                            minWidth: '140px',
+                            minHeight: '56px',
+                            maxWidth: '384px',
+                            maxHeight: '140px',
+                            marginLeft: '20px',
+                            marginRight: '20px',
+                            borderRadius: '9999px',
+                            objectFit: 'cover',
+                            display: 'block',
+                            flexShrink: 0,
+                        }}
+                    />
+                </div>
+            ))}
 
         </div>
     )
@@ -139,7 +83,7 @@ const HoverMarquee = () => {
                 top-0
                 w-full
                 overflow-hidden
-                bg-[#D3FD50]
+                bg-[#7dd3fc]
                 text-black
             "
             style={{
@@ -152,9 +96,23 @@ const HoverMarquee = () => {
                 className="marquee-track flex h-full w-max items-center"
             >
 
-                <MarqueeGroup />
+                <MarqueeGroup
+                    images={[
+                        marqueeImageOne,
+                        marqueeImageTwo,
+                        marqueeImageThree,
+                        marqueeImageFour,
+                    ]}
+                />
 
-                <MarqueeGroup />
+                <MarqueeGroup
+                    images={[
+                        marqueeImageOne,
+                        marqueeImageTwo,
+                        marqueeImageThree,
+                        marqueeImageFour,
+                    ]}
+                />
 
             </div>
 
@@ -169,19 +127,25 @@ const HoverMarquee = () => {
 
 const MenuRow = ({
     title,
+    to,
     border = 'border-t',
 }) => {
 
     const [hovered, setHovered] = useState(false)
+    const [, setNavOpen] = useContext(NavbarContext)
 
     return (
-        <div
+        <Link
+            to={to}
+            onClick={() => setNavOpen(false)}
             className={`
                 link
+                block
                 origin-top
                 relative
                 w-full
                 overflow-hidden
+                no-underline
                 ${border}
                 border-white
             `}
@@ -233,7 +197,7 @@ const MenuRow = ({
 
 
             {/* =====================================================
-                HOVER GREEN PANEL
+                HOVER Blue PANEL
             ===================================================== */}
 
             <div
@@ -241,7 +205,7 @@ const MenuRow = ({
                     absolute
                     inset-0
                     overflow-hidden
-                    bg-[#D3FD50]
+                    bg-[#7dd3fc]
                 "
                 style={{
                     zIndex: 5,
@@ -261,7 +225,7 @@ const MenuRow = ({
 
             </div>
 
-        </div>
+        </Link>
     )
 }
 
@@ -720,7 +684,7 @@ const FullScreenNav = () => {
                             LOGO
                         ================================================= */}
 
-                        <div>
+                        <Link to="/" className="block">
 
                             <div
                                 className="
@@ -741,7 +705,7 @@ const FullScreenNav = () => {
 
                             </div>
 
-                        </div>
+                        </Link>
 
 
                         {/* =================================================
@@ -779,7 +743,7 @@ const FullScreenNav = () => {
                                     -translate-x-1/2
                                     -translate-y-1/2
                                     rotate-45
-                                    bg-[#D3FD50]
+                                    bg-[#7dd3fc]
                                     lg:h-32
                                     lg:w-1
                                 "
@@ -798,7 +762,7 @@ const FullScreenNav = () => {
                                     -translate-x-1/2
                                     -translate-y-1/2
                                     -rotate-45
-                                    bg-[#D3FD50]
+                                    bg-[#7dd3fc]
                                     lg:h-32
                                     lg:w-1
                                 "
@@ -825,6 +789,7 @@ const FullScreenNav = () => {
 
                         <MenuRow
                             title="Projets"
+                            to="/projects"
                         />
 
 
@@ -832,6 +797,7 @@ const FullScreenNav = () => {
 
                         <MenuRow
                             title="About"
+                            to="/about"
                         />
 
 
@@ -839,13 +805,15 @@ const FullScreenNav = () => {
 
                         <MenuRow
                             title="Contact"
+                            to="/contact"
                         />
 
 
-                        {/* BLOGS */}
+                        {/* SOLAR */}
 
                         <MenuRow
-                            title="Blogs"
+                            title="Solar"
+                            to="/solar"
                             border="border-y"
                         />
 

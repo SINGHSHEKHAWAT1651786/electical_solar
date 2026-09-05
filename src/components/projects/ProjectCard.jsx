@@ -1,7 +1,7 @@
 
 const ProjectCard = ({ projects, onProjectHover }) => {
   return (
-    <>
+    <div className="project-visual flex h-full w-full md:flex-row flex-col md:gap-4 gap-2">
       {projects.map((project) => (
         <a
           key={project.href}
@@ -35,7 +35,7 @@ const ProjectCard = ({ projects, onProjectHover }) => {
 
         </a>
       ))}
-    </>
+    </div>
   )
 }
 

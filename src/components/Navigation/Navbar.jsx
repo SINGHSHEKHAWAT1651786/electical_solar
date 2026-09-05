@@ -1,4 +1,5 @@
 import React, { useContext, useRef } from 'react'
+import { Link } from 'react-router-dom'
 import { NavbarColorContext, NavbarContext } from '../../context/NavContext'
 import heroImage from '../../assets/hero.png'
 
@@ -13,7 +14,7 @@ const Navbar = () => {
         <div className="z-50 flex fixed top-0 w-full items-start justify-between">
 
             {/* LOGO  */}
-            <div className="lg:p-5 p-2">
+            <Link to="/" className="lg:p-5 p-2 block">
                 <div className="lg:h-30 w-36">
                     <img
                         src={heroImage}
@@ -21,7 +22,7 @@ const Navbar = () => {
                         className="w-full h-auto object-contain"
                     />
                 </div>
-            </div>
+            </Link>
 
 
             {/*  MENU BUTTON  */}
@@ -44,7 +45,7 @@ const Navbar = () => {
                 {/* Green Hover Background */}
                 <div
                     ref={navGreenRef}
-                    className="bg-[#D3FD50] transition-all duration-300 absolute top-0 left-0 h-0 w-full"
+                    className="bg-[#7dd3fc] transition-all duration-300 absolute top-0 left-0 h-0 w-full"
                 ></div>
 
 

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { Link } from 'react-router-dom'
 
 const HomeBottomText = () => {
@@ -11,8 +11,8 @@ const HomeBottomText = () => {
       {/*  PROJECTS  */}
       <div className='
         border border-white
-        hover:border-[#D3FD50]
-        hover:text-[#D3FD50]
+        hover:border-[#7dd3fc]
+        hover:text-[#7dd3fc]
         h-10 sm:h-12 lg:h-20
         flex items-center
         pt-1
@@ -33,8 +33,8 @@ const HomeBottomText = () => {
       {/*  ABOUT  */}
       <div className='
         border border-white
-        hover:border-[#D3FD50]
-        hover:text-[#D3FD50]
+        hover:border-[#7dd3fc]
+        hover:text-[#7dd3fc]
         h-10 sm:h-12 lg:h-20
         flex items-center
         pt-1
@@ -44,6 +44,9 @@ const HomeBottomText = () => {
         transition-all duration-300
       '>
         <Link
+          onClick={() => {
+            window.scrollTo({ top: 0, left: 0, behavior: 'instant' })
+          }}
           className='text-[15px] sm:text-base lg:text-[5vw] lg:mt-0'
           to='/about'
         >
@@ -83,8 +86,8 @@ const HomeBottomText = () => {
             border-white
             text-white
             flex items-center justify-center
-            hover:border-[#D3FD50]
-            hover:text-[#D3FD50]
+            hover:border-[#7dd3fc]
+            hover:text-[#7dd3fc]
             transition-all duration-300
             bg-black/30
             backdrop-blur-sm
@@ -142,8 +145,8 @@ const HomeBottomText = () => {
               flex items-center justify-center
               uppercase
               text-xs sm:text-sm
-              hover:border-[#D3FD50]
-              hover:text-[#D3FD50]
+              hover:border-[#7dd3fc]
+              hover:text-[#7dd3fc]
               hover:scale-105
               transition-all duration-300
             '
@@ -169,8 +172,8 @@ const HomeBottomText = () => {
               flex items-center justify-center
               uppercase
               text-xs sm:text-sm
-              hover:border-[#D3FD50]
-              hover:text-[#D3FD50]
+              hover:border-[#7dd3fc]
+              hover:text-[#7dd3fc]
               hover:scale-105
               transition-all duration-300
             '
@@ -196,8 +199,8 @@ const HomeBottomText = () => {
               flex items-center justify-center
               uppercase
               text-xs sm:text-sm
-              hover:border-[#D3FD50]
-              hover:text-[#D3FD50]
+              hover:border-[#7dd3fc]
+              hover:text-[#7dd3fc]
               hover:scale-105
               transition-all duration-300
             '
@@ -242,8 +245,8 @@ const HomeBottomText = () => {
             text-white
             flex items-center justify-center
             text-2xl sm:text-3xl lg:text-5xl
-            hover:border-[#D3FD50]
-            hover:text-[#D3FD50]
+            hover:border-[#7dd3fc]
+            hover:text-[#7dd3fc]
             transition-all duration-300
             bg-black/30
             backdrop-blur-sm
@@ -280,8 +283,8 @@ const HomeBottomText = () => {
               text-white
               flex items-center justify-center
               text-lg sm:text-xl
-              hover:border-[#D3FD50]
-              hover:text-[#D3FD50]
+              hover:border-[#7dd3fc]
+              hover:text-[#7dd3fc]
               hover:scale-110
               transition-all duration-300
             '
@@ -306,8 +309,8 @@ const HomeBottomText = () => {
               flex items-center justify-center
               font-bold
               text-base sm:text-lg
-              hover:border-[#D3FD50]
-              hover:text-[#D3FD50]
+              hover:border-[#7dd3fc]
+              hover:text-[#7dd3fc]
               hover:scale-110
               transition-all duration-300
             '
@@ -329,8 +332,8 @@ const HomeBottomText = () => {
               text-white
               flex items-center justify-center
               text-lg sm:text-xl
-              hover:border-[#D3FD50]
-              hover:text-[#D3FD50]
+              hover:border-[#7dd3fc]
+              hover:text-[#7dd3fc]
               hover:scale-110
               transition-all duration-300
             '
