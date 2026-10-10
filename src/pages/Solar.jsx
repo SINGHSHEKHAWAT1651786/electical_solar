@@ -1437,6 +1437,8 @@ const Solar = () => {
 .hero-title {
     width: min(100%, 1000px);
 
+    transform: translateY(20px);
+
     margin:
         auto
         0
@@ -1459,6 +1461,12 @@ const Solar = () => {
     text-transform: uppercase;
 
     overflow: visible;
+}
+
+@media (min-width: 768px) {
+    .hero-title {
+        transform: none;
+    }
 }
 
 .hero-title-word {
@@ -3667,6 +3675,7 @@ const Solar = () => {
                                         }
                                         alt={brand}
                                         loading="lazy"
+                                        decoding="async"
                                     />
 
                                     <div className="panel-scene-overlay" />
@@ -3750,6 +3759,7 @@ const Solar = () => {
                                         project.title
                                     }
                                     loading="lazy"
+                                    decoding="async"
                                 />
 
                                 <div className="project-card-overlay" />

@@ -1,12 +1,26 @@
-import { useLayoutEffect } from 'react'
+import { lazy, Suspense, useLayoutEffect } from 'react'
 import { Route, Routes, useLocation } from 'react-router-dom'
-import Home from './pages/Home'
-import About from './pages/About'
-import Projects from './pages/Projects'
-import Contact from './pages/Contact'
-import Solar from './pages/Solar'
+import { LoaderCircle } from 'lucide-react'
 import Navbar from './components/Navigation/Navbar'
 import FullScreenNav from './components/Navigation/FullScreenNav'
+
+const Home = lazy(() => import('./pages/Home'))
+const About = lazy(() => import('./pages/About'))
+const Projects = lazy(() => import('./pages/Projects'))
+const Contact = lazy(() => import('./pages/Contact'))
+const Solar = lazy(() => import('./pages/Solar'))
+const Electrical = lazy(() => import('./pages/Electrical'))
+
+const RouteLoading = () => (
+  <div
+    className='grid min-h-screen place-items-center bg-[#101214] text-[#00aeea]'
+    role='status'
+    aria-live='polite'
+  >
+    <span className='sr-only'>Loading page</span>
+    <LoaderCircle className='animate-spin' size={28} aria-hidden='true' />
+  </div>
+)
 
 const ScrollToTop = () => {
   const { pathname } = useLocation()
@@ -31,13 +45,16 @@ const App = () => {
       <ScrollToTop />
       <Navbar />
       <FullScreenNav />
-      <Routes>
-        <Route path='/' element={<Home/>} />
-        <Route path='/about' element={<About/>} />
-        <Route path='/projects' element={<Projects/>} />
-        <Route path='/contact' element={<Contact/>} />
-        <Route path='/solar' element={<Solar/>} />
-      </Routes>
+      <Suspense fallback={<RouteLoading />}>
+        <Routes>
+          <Route path='/' element={<Home />} />
+          <Route path='/about' element={<About />} />
+          <Route path='/projects' element={<Projects />} />
+          <Route path='/contact' element={<Contact />} />
+          <Route path='/solar' element={<Solar />} />
+          <Route path='/electrical' element={<Electrical />} />
+        </Routes>
+      </Suspense>
     </div>
   )
 }

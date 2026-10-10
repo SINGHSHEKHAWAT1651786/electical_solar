@@ -1,13 +1,13 @@
 import { useGSAP } from '@gsap/react'
 import gsap from 'gsap'
-import { useContext, useRef, useState } from 'react'
+import { useContext, useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { NavbarContext } from '../../context/NavContext'
+import { NavbarContext } from '../../context/navbarContext'
 import heroImage from '../../assets/hero.png'
-import marqueeImageOne from '../../assets/images/image1.jpg'
-import marqueeImageTwo from '../../assets/images/image2.jpg'
-import marqueeImageThree from '../../assets/images/image4.jpg'
-import marqueeImageFour from '../../assets/images/image7.jpg'
+import marqueeImageOne from '../../assets/optimized/image1.jpg'
+import marqueeImageTwo from '../../assets/optimized/image2.jpg'
+import marqueeImageThree from '../../assets/optimized/image4.jpg'
+import marqueeImageFour from '../../assets/optimized/image7.jpg'
 
 
 // =============================================================
@@ -25,7 +25,7 @@ const MarqueeGroup = ({ images }) => {
             }}
         >
 
-            {images.map((image, index) => (
+            {images.map((image) => (
                 <div
                     key={image}
                     className="flex shrink-0 items-center"
@@ -33,25 +33,28 @@ const MarqueeGroup = ({ images }) => {
                     <h2
                         className="whitespace-nowrap font-[font2] uppercase m-0 p-0"
                         style={{
-                            fontSize: 'clamp(42px, 8vw, 120px)',
+                            fontSize: 'clamp(24px, 3.6vw, 56px)',
                             lineHeight: '0.8',
                             flexShrink: 0,
                         }}
                     >
-                        Pour Tout voir
+                        Innovex Automation
                     </h2>
 
                     <img
                         src={image}
-                        alt={`Innovex project ${index + 1}`}
+                        alt=""
                         draggable="false"
+                        loading="lazy"
+                        decoding="async"
+                        aria-hidden="true"
                         style={{
-                            width: 'clamp(140px, 25vw, 384px)',
-                            height: 'clamp(56px, 9vw, 140px)',
-                            minWidth: '140px',
-                            minHeight: '56px',
-                            maxWidth: '384px',
-                            maxHeight: '140px',
+                            width: 'clamp(120px, 18vw, 260px)',
+                            height: 'clamp(48px, 6vw, 88px)',
+                            minWidth: '120px',
+                            minHeight: '48px',
+                            maxWidth: '260px',
+                            maxHeight: '88px',
                             marginLeft: '20px',
                             marginRight: '20px',
                             borderRadius: '9999px',
@@ -83,7 +86,7 @@ const HoverMarquee = () => {
                 top-0
                 w-full
                 overflow-hidden
-                bg-[#7dd3fc]
+                bg-[#00aeea]
                 text-black
             "
             style={{
@@ -138,23 +141,13 @@ const MenuRow = ({
         <Link
             to={to}
             onClick={() => setNavOpen(false)}
-            className={`
-                link
-                block
-                origin-top
-                relative
-                w-full
-                overflow-hidden
-                no-underline
-                ${border}
-                border-white
-            `}
+            className={`link block origin-top relative w-full overflow-hidden no-underline ${border} border-white`}
             onMouseEnter={() => setHovered(true)}
             onMouseLeave={() => setHovered(false)}
             style={{
-                height: 'clamp(82px, 10vw, 150px)',
-                minHeight: '82px',
-                maxHeight: '150px',
+                height: 'clamp(62px, 6.5vw, 100px)',
+                minHeight: '62px',
+                maxHeight: '100px',
                 transformOrigin: 'top',
             }}
         >
@@ -186,7 +179,7 @@ const MenuRow = ({
                         p-0
                     "
                     style={{
-                        fontSize: 'clamp(42px, 8vw, 120px)',
+                        fontSize: 'clamp(28px, 4vw, 56px)',
                         lineHeight: '0.8',
                     }}
                 >
@@ -205,7 +198,7 @@ const MenuRow = ({
                     absolute
                     inset-0
                     overflow-hidden
-                    bg-[#7dd3fc]
+                    bg-[#00aeea]
                 "
                 style={{
                     zIndex: 5,
@@ -241,9 +234,21 @@ const FullScreenNav = () => {
     const fullScreenRef = useRef(null)
 
     const stairsRef = useRef([])
+    const navTimelineRef = useRef(null)
 
     const [navOpen, setNavOpen] =
         useContext(NavbarContext)
+
+    useEffect(() => {
+        if (!navOpen) return undefined
+
+        const closeOnEscape = (event) => {
+            if (event.key === 'Escape') setNavOpen(false)
+        }
+
+        document.addEventListener('keydown', closeOnEscape)
+        return () => document.removeEventListener('keydown', closeOnEscape)
+    }, [navOpen, setNavOpen])
 
 
     // =========================================================
@@ -268,7 +273,9 @@ const FullScreenNav = () => {
 
     function gsapAnimation() {
 
+        navTimelineRef.current?.kill()
         const tl = gsap.timeline()
+        navTimelineRef.current = tl
 
 
         // =====================================================
@@ -315,14 +322,14 @@ const FullScreenNav = () => {
 
         tl.to(stairsRef.current, {
 
-            delay: 0.1,
+            delay: 0.05,
 
             height: '100%',
 
-            duration: 0.7,
+            duration: 0.35,
 
             stagger: {
-                amount: -0.3,
+                amount: -0.12,
             },
 
             ease: 'power3.inOut',
@@ -342,10 +349,10 @@ const FullScreenNav = () => {
 
                 rotateX: 0,
 
-                duration: 0.55,
+                duration: 0.34,
 
                 stagger: {
-                    amount: 0.3,
+                    amount: 0.16,
                 },
 
                 ease: 'power3.out',
@@ -365,7 +372,7 @@ const FullScreenNav = () => {
 
                 opacity: 1,
 
-                duration: 0.4,
+                duration: 0.25,
 
                 ease: 'power3.out',
 
@@ -382,7 +389,9 @@ const FullScreenNav = () => {
 
     function gsapAnimationReverse() {
 
+        navTimelineRef.current?.kill()
         const tl = gsap.timeline()
+        navTimelineRef.current = tl
 
 
         // =====================================================
@@ -394,7 +403,7 @@ const FullScreenNav = () => {
             {
                 opacity: 0,
 
-                duration: 0.55,
+                duration: 0.3,
 
                 ease: 'power3.inOut',
             },
@@ -412,7 +421,7 @@ const FullScreenNav = () => {
                 duration: 0.55,
 
                 stagger: {
-                    amount: 0.1,
+                    amount: 0.08,
                 },
 
                 ease: 'power3.inOut',
@@ -430,10 +439,10 @@ const FullScreenNav = () => {
             {
                 height: '0%',
 
-                duration: 0.55,
+                duration: 0.3,
 
                 stagger: {
-                    amount: 0.15,
+                    amount: 0.1,
 
                     from: 'end',
                 },
@@ -461,6 +470,16 @@ const FullScreenNav = () => {
 
     useGSAP(
         () => {
+
+            if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                gsap.set(fullScreenRef.current, {
+                    display: navOpen ? 'block' : 'none',
+                })
+                gsap.set(stairsRef.current, { clearProps: 'all' })
+                gsap.set('.link', { clearProps: 'all', opacity: 1, rotateX: 0 })
+                gsap.set('.navlink', { clearProps: 'all', opacity: 1 })
+                return
+            }
 
             if (navOpen) {
 
@@ -540,6 +559,12 @@ const FullScreenNav = () => {
                         display: none;
                         width: 0;
                         height: 0;
+                    }
+
+                    @media (prefers-reduced-motion: reduce) {
+                        .marquee-track {
+                            animation: none;
+                        }
                     }
 
                 `}
@@ -659,6 +684,11 @@ const FullScreenNav = () => {
                         overflow-x-hidden
                         overflow-y-auto
                     "
+                    onClick={(event) => {
+                        if (!event.target.closest('a, button')) {
+                            setNavOpen(false)
+                        }
+                    }}
                 >
 
                     {/* =================================================
@@ -684,20 +714,15 @@ const FullScreenNav = () => {
                             LOGO
                         ================================================= */}
 
-                        <Link to="/" className="block">
+                        <Link to="/" aria-label="Innovex home" className="block">
 
-                            <div
-                                className="
-                                    w-24
-                                    lg:w-36
-                                "
-                            >
+                            <div className="h-16 w-16">
 
                                 <img
                                     src={heroImage}
                                     alt="Innovex Automation"
                                     className="
-                                        h-auto
+                                        h-full
                                         w-full
                                         object-contain
                                     "
@@ -720,14 +745,14 @@ const FullScreenNav = () => {
                             aria-label="Close menu"
                             className="
                                 relative
-                                h-20
-                                w-20
+                                h-14
+                                w-14
                                 cursor-pointer
                                 border-0
                                 bg-transparent
                                 p-0
-                                lg:h-32
-                                lg:w-32
+                                lg:h-16
+                                lg:w-16
                             "
                         >
 
@@ -738,13 +763,13 @@ const FullScreenNav = () => {
                                     absolute
                                     left-1/2
                                     top-1/2
-                                    h-20
+                                    h-10
                                     w-0.5
                                     -translate-x-1/2
                                     -translate-y-1/2
                                     rotate-45
-                                    bg-[#7dd3fc]
-                                    lg:h-32
+                                    bg-[#00aeea]
+                                    lg:h-12
                                     lg:w-1
                                 "
                             />
@@ -757,13 +782,13 @@ const FullScreenNav = () => {
                                     absolute
                                     left-1/2
                                     top-1/2
-                                    h-20
+                                    h-10
                                     w-0.5
                                     -translate-x-1/2
                                     -translate-y-1/2
                                     -rotate-45
-                                    bg-[#7dd3fc]
-                                    lg:h-32
+                                    bg-[#00aeea]
+                                    lg:h-12
                                     lg:w-1
                                 "
                             />
@@ -788,7 +813,12 @@ const FullScreenNav = () => {
                         {/* PROJECTS */}
 
                         <MenuRow
-                            title="Projets"
+                            title="Electrical"
+                            to="/electrical"
+                        />
+
+                        <MenuRow
+                            title="Projects"
                             to="/projects"
                         />
 

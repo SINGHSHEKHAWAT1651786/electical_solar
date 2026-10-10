@@ -1,66 +1,57 @@
-import React, { useContext, useRef } from 'react'
-import { Link } from 'react-router-dom'
-import { NavbarColorContext, NavbarContext } from '../../context/NavContext'
+import { useContext } from 'react'
+import { Link, NavLink } from 'react-router-dom'
+import { Menu, X } from 'lucide-react'
+import { NavbarContext } from '../../context/navbarContext'
 import heroImage from '../../assets/hero.png'
 
 const Navbar = () => {
-
-    const navGreenRef = useRef(null)
-
     const [navOpen, setNavOpen] = useContext(NavbarContext)
-    const [navColor, setNavColor] = useContext(NavbarColorContext)
 
     return (
-        <div className="z-50 flex fixed top-0 w-full items-start justify-between">
-
-            {/* LOGO  */}
-            <Link to="/" className="lg:p-5 p-2 block">
-                <div className="lg:h-30 w-36">
-                    <img
-                        src={heroImage}
-                        alt="Innovex Automation"
-                        className="w-full h-auto object-contain"
-                    />
-                </div>
+        <nav
+            aria-label='Main navigation'
+            className='fixed inset-x-0 top-0 z-50 flex h-16 items-center justify-between border-b border-slate-500/15 bg-[#e8eef0]/90 px-4 text-[#28383f] shadow-[0_2px_18px_rgba(22,42,51,0.07)] backdrop-blur-xl sm:px-6 lg:h-[76px] lg:px-10'
+        >
+            <Link to='/' aria-label='Innovex home' className='flex h-16 w-16 shrink-0 items-center justify-center focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#00aeea]'>
+                <img
+                    src={heroImage}
+                    alt='Innovex Automation'
+                    className='h-full w-full object-contain'
+                    loading='eager'
+                    fetchPriority='high'
+                />
             </Link>
 
-
-            {/*  MENU BUTTON  */}
-            <div
-                onClick={() => {
-                    setNavOpen(true)
-                }}
-
-                onMouseEnter={() => {
-                    navGreenRef.current.style.height = '100%'
-                }}
-
-                onMouseLeave={() => {
-                    navGreenRef.current.style.height = '0%'
-                }}
-
-                className="lg:h-16 h-10 bg-black relative lg:w-[16vw] w-48 cursor-pointer"
-            >
-
-                {/* Green Hover Background */}
-                <div
-                    ref={navGreenRef}
-                    className="bg-[#7dd3fc] transition-all duration-300 absolute top-0 left-0 h-0 w-full"
-                ></div>
-
-
-                {/* Hamburger Icon */}
-                <div className="relative h-full lg:px-12 px-8 flex flex-col justify-center items-end lg:gap-1.5 gap-0.5">
-
-                    <div className="lg:w-18 w-12 h-0.5 bg-white"></div>
-
-                    <div className="lg:w-10 w-6 h-0.5 bg-white"></div>
-
-                </div>
-
+            <div className='ml-auto mr-4 hidden items-center gap-6 md:flex lg:mr-8 lg:gap-8'>
+                {[
+                    ['Electrical', '/electrical'],
+                    ['Projects', '/projects'],
+                    ['About', '/about'],
+                    ['Solar', '/solar'],
+                    ['Contact', '/contact'],
+                ].map(([label, to]) => (
+                    <NavLink
+                        key={to}
+                        to={to}
+                        className={({ isActive }) => `text-[9px] uppercase tracking-[0.1em] transition-colors focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#00aeea] lg:text-[10px] ${isActive ? 'font-semibold text-sky-800' : 'text-slate-600 hover:text-sky-800'}`}
+                    >
+                        {label}
+                    </NavLink>
+                ))}
             </div>
 
-        </div>
+            <button
+                type='button'
+                aria-label={navOpen ? 'Close menu' : 'Open menu'}
+                aria-expanded={navOpen}
+                onClick={() => setNavOpen(!navOpen)}
+                className='ml-auto inline-flex h-10 w-10 shrink-0 items-center justify-center border border-slate-500/25 bg-white/55 text-sky-800 transition-colors hover:border-sky-700/30 hover:bg-sky-100 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-sky-800 md:hidden'
+            >
+                {navOpen
+                    ? <X size={19} strokeWidth={1.8} aria-hidden='true' />
+                    : <Menu size={19} strokeWidth={1.8} aria-hidden='true' />}
+            </button>
+        </nav>
     )
 }
 

@@ -11,40 +11,55 @@ const Stairs = (props) => {
     const pageRef = useRef(null)
 
     useGSAP(function () {
-        const tl = gsap.timeline()
-        tl.to(stairParentRef.current, {
+        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+            gsap.set(stairParentRef.current, { display: 'none' })
+            gsap.set(pageRef.current, { clearProps: 'all' })
+            return
+        }
+
+        const tl = gsap.timeline({ defaults: { ease: 'power2.inOut' } })
+        tl.set(stairParentRef.current, {
             display: 'block',
         })
         tl.from('.stair', {
             height: 0,
+            duration: 0.22,
             stagger: {
-                amount: -0.2
-            }
+                amount: 0.07,
+            },
         })
         tl.to('.stair', {
             y: '100%',
+            duration: 0.24,
             stagger: {
-                amount: -0.25
-            }
+                amount: 0.07,
+                from: 'end',
+            },
         })
-        tl.to(stairParentRef.current, {
-            display: 'none'
+        tl.set(stairParentRef.current, {
+            display: 'none',
         })
-        tl.to('.stair', {
+        tl.set('.stair', {
             y: '0%',
         })
 
-        gsap.from(pageRef.current,{
-            opacity:0,
-            delay:1.3,
-            scale:1.2
+        gsap.fromTo(pageRef.current, {
+            opacity: 0,
+            y: 4,
+        }, {
+            opacity: 1,
+            y: 0,
+            duration: 0.25,
+            delay: 0.2,
+            ease: 'power1.out',
+            clearProps: 'transform,opacity',
         })
     }, [currentPath])
     
 
     return (
         <div>
-            <div ref={stairParentRef} className='h-screen w-full fixed z-20 top-0'>
+            <div ref={stairParentRef} className='pointer-events-none h-screen w-full fixed z-20 top-0'>
                 <div className='h-full w-full flex'>
                     <div className='stair h-full w-1/5 bg-black'></div>
                     <div className='stair h-full w-1/5 bg-black'></div>

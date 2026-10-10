@@ -1,60 +1,11 @@
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
 
 const HomeBottomText = () => {
   const [socialOpen, setSocialOpen] = useState(false)
   const [branchOpen, setBranchOpen] = useState(false)
 
   return (
-    <div className='font-[font2] flex items-center justify-center gap-1 sm:gap-2 px-2'>
-
-      {/*  PROJECTS  */}
-      <div className='
-        border border-white
-        hover:border-[#7dd3fc]
-        hover:text-[#7dd3fc]
-        h-10 sm:h-12 lg:h-20
-        flex items-center
-        pt-1
-        px-3 sm:px-4 lg:px-5
-        rounded-full
-        uppercase
-        transition-all duration-300
-      '>
-        <Link
-          className='text-[15px] sm:text-base lg:text-[5vw] lg:mt-0'
-          to='/projects'
-        >
-          Projects
-        </Link>
-      </div>
-
-
-      {/*  ABOUT  */}
-      <div className='
-        border border-white
-        hover:border-[#7dd3fc]
-        hover:text-[#7dd3fc]
-        h-10 sm:h-12 lg:h-20
-        flex items-center
-        pt-1
-        px-3 sm:px-4 lg:px-5
-        rounded-full
-        uppercase
-        transition-all duration-300
-      '>
-        <Link
-          onClick={() => {
-            window.scrollTo({ top: 0, left: 0, behavior: 'instant' })
-          }}
-          className='text-[15px] sm:text-base lg:text-[5vw] lg:mt-0'
-          to='/about'
-        >
-          About
-        </Link>
-      </div>
-
-
+    <div className='font-[font2]'>
       {/* BRANCH OFFICES */}
       <div
         className='

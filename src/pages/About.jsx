@@ -5,13 +5,13 @@ import { useLayoutEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { Link } from 'react-router-dom'
 
-import image1 from '../assets/images/image1.jpg'
-import image2 from '../assets/images/image2.jpg'
-import image3 from '../assets/images/image3.jpg'
-import image4 from '../assets/images/image4.jpg'
-import image5 from '../assets/images/image5.jpg'
-import image6 from '../assets/images/image6.jpg'
-import image7 from '../assets/images/image7.jpg'
+import image1 from '../assets/optimized/image1.jpg'
+import image2 from '../assets/optimized/image2.jpg'
+import image3 from '../assets/optimized/image3.jpg'
+import image4 from '../assets/optimized/image4.jpg'
+import image5 from '../assets/optimized/image5.jpg'
+import image6 from '../assets/optimized/image6.jpg'
+import image7 from '../assets/optimized/image7.jpg'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -3086,6 +3086,8 @@ const About = () => {
                   <img
                     src={service.image}
                     alt={service.title}
+                    loading="lazy"
+                    decoding="async"
                     className="
                       service-image
                       h-full

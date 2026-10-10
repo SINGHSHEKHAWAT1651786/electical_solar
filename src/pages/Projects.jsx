@@ -2,8 +2,13 @@ import { useGSAP } from '@gsap/react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { useRef, useState } from 'react'
+import { MoveDown } from 'lucide-react'
 
 import ProjectCard from '../components/projects/ProjectCard'
+import automationImage from '../assets/optimized/image1.jpg'
+import electricalImage from '../assets/optimized/image4.jpg'
+import solarImage from '../assets/optimized/image5.jpg'
+import supportImage from '../assets/optimized/image6.jpg'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -19,60 +24,36 @@ const Projects = () => {
     {
       projects: [
         {
-          image:
-            'https://k72.ca/uploads/caseStudies/PJC/Thumbnails/PJC_SiteK72_Thumbnail_1280x960-1280x960.jpg',
-          title: 'Prendre les devants',
-          type: 'Campagne',
-          year: '2024',
-          href: 'https://k72.ca/travail/prendre-les-devants',
+          image: automationImage,
+          title: 'Factory Automation',
+          type: 'Industrial Automation',
+          year: 'SAMPLE',
+          href: '/contact',
         },
         {
-          image:
-            'https://k72.ca/uploads/caseStudies/WIDESCAPE/WS---K72.ca---Thumbnail-1280x960.jpg',
-          title: 'Widescape',
-          type: 'Branding',
-          year: '2022',
-          href: 'https://k72.ca/travail/widescape',
+          image: electricalImage,
+          title: 'Electrical Distribution',
+          type: 'Electrical Solutions',
+          year: 'SAMPLE',
+          href: '/contact',
         },
       ],
     },
     {
       projects: [
         {
-          image:
-            'https://k72.ca/uploads/caseStudies/OKA/OKA_thumbnail-1280x960.jpg',
-          title: 'OKA',
-          type: 'Campaign',
-          year: '2023',
-          href: 'https://k72.ca/travail/oka',
+          image: solarImage,
+          title: 'Rooftop Solar System',
+          type: 'Solar Energy',
+          year: 'SAMPLE',
+          href: '/contact',
         },
         {
-          image:
-            'https://k72.ca/uploads/caseStudies/Opto/thumbnailimage_opto-1280x960.jpg',
-          title: 'Opto reseau',
-          type: 'Digital',
-          year: '2023',
-          href: 'https://k72.ca/travail/opto-reseau',
-        },
-      ],
-    },
-    {
-      projects: [
-        {
-          image:
-            'https://k72.ca/uploads/caseStudies/LAMAJEURE_-_Son_sur_mesure/chalaxeur-thumbnail_img-1280x960.jpg',
-          title: 'La Majeure',
-          type: 'Branding',
-          year: '2022',
-          href: 'https://k72.ca/travail/lamajeure',
-        },
-        {
-          image:
-            'https://k72.ca/uploads/caseStudies/SHELTON/thumbnailimage_shelton-1280x960.jpg',
-          title: 'Shelton',
-          type: 'Campaign',
-          year: '2022',
-          href: 'https://k72.ca/travail/shelton',
+          image: supportImage,
+          title: 'Control Panel Upgrade',
+          type: 'Electrical & Commissioning',
+          year: 'SAMPLE',
+          href: '/contact',
         },
       ],
     },
@@ -368,7 +349,7 @@ const Projects = () => {
       ========================================================= */}
 
       {activeProject && (
-        <div className="fixed top-32 md:top-56 left-0 z-30 w-full bg-white text-black pointer-events-none">
+        <div className="fixed left-0 top-[72px] z-30 w-full bg-white text-black pointer-events-none md:top-[84px]">
           <div className="grid grid-cols-[1fr_auto_auto] items-center gap-4 border-y border-black px-3 py-2 md:px-5 md:py-3">
             <span className="font-[font1] text-xl uppercase md:text-4xl">
               {activeProject.title}
@@ -389,10 +370,22 @@ const Projects = () => {
           TITLE
       ========================================================= */}
 
-      <div className="pt-[45vh]">
-        <h2 className="font-[font2] md:text-[9.5vw] text-7xl uppercase">
-          Projets
+      <div className="pt-[28vh]">
+        <h2 className="font-[font2] text-5xl uppercase md:text-7xl">
+          Projects
         </h2>
+        <button
+          type="button"
+          onClick={() => projectsRef.current?.scrollIntoView({
+            behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches
+              ? 'auto'
+              : 'smooth',
+          })}
+          className="mt-5 inline-flex min-h-10 items-center gap-2 text-xs uppercase tracking-[0.12em] text-black/60 transition-colors hover:text-black focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#00aeea]"
+          aria-label="Scroll to projects"
+        >
+          <MoveDown size={16} aria-hidden="true" />
+        </button>
       </div>
 
       {/* =========================================================

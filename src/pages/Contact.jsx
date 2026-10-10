@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react'
+import { useEffect, useRef } from 'react'
 import { useGSAP } from '@gsap/react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
@@ -1088,7 +1088,7 @@ const Contact = () => {
 
                     {/* FORM HEADING */}
 
-                    <div className="mb-20">
+                    <div className="mb-14 sm:mb-16">
 
                         <div className="mb-5 overflow-hidden">
 
@@ -1111,12 +1111,10 @@ const Contact = () => {
                             <h2
                                 className="
                                     form-heading-line
-                                    font-[font2]
-                                    text-[15vw]
+                                    font-[font1]
+                                    text-[clamp(2.25rem,8vw,7.5rem)]
                                     uppercase
-                                    leading-[0.8]
-                                    tracking-[-0.06em]
-                                    lg:text-[10vw]
+                                    leading-[0.92]
                                 "
                             >
                                 TELL US
@@ -1130,15 +1128,13 @@ const Contact = () => {
                             <h2
                                 className="
                                     form-heading-line
-                                    font-[font2]
-                                    text-[15vw]
+                                    font-[font1]
+                                    text-[clamp(2.25rem,8vw,7.5rem)]
                                     uppercase
-                                    leading-[0.8]
-                                    tracking-[-0.06em]
-                                    lg:text-[10vw]
+                                    leading-[0.92]
                                 "
                             >
-                                ABOUT IT.
+                                ABOUT YOUR PROJECT.
                             </h2>
 
                         </div>
@@ -1314,7 +1310,7 @@ const Contact = () => {
                                     text-[#111]/50
                                 "
                             >
-                                04 / Tell us about your project
+                                04 / Project details
                             </label>
 
 
@@ -1323,7 +1319,7 @@ const Contact = () => {
                                 name="message"
                                 rows="5"
                                 required
-                                placeholder="How can we help?"
+                                placeholder="What are you planning?"
                                 className="
                                     w-full
                                     resize-none

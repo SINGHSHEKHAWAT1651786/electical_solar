@@ -1,5 +1,65 @@
 @import "tailwindcss";
 
+@font-face {
+    font-family: font1;
+    font-style: normal;
+    font-weight: 500;
+    font-display: swap;
+    src: url('@fontsource/barlow-condensed/files/barlow-condensed-latin-500-normal.woff2') format('woff2');
+}
+
+@font-face {
+    font-family: font1;
+    font-style: normal;
+    font-weight: 600;
+    font-display: swap;
+    src: url('@fontsource/barlow-condensed/files/barlow-condensed-latin-600-normal.woff2') format('woff2');
+}
+
+@font-face {
+    font-family: font1;
+    font-style: normal;
+    font-weight: 700;
+    font-display: swap;
+    src: url('@fontsource/barlow-condensed/files/barlow-condensed-latin-700-normal.woff2') format('woff2');
+}
+
+@font-face {
+    font-family: font2;
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: url('@fontsource/manrope/files/manrope-latin-400-normal.woff2') format('woff2');
+}
+
+@font-face {
+    font-family: font2;
+    font-style: normal;
+    font-weight: 500;
+    font-display: swap;
+    src: url('@fontsource/manrope/files/manrope-latin-500-normal.woff2') format('woff2');
+}
+
+@font-face {
+    font-family: font2;
+    font-style: normal;
+    font-weight: 600;
+    font-display: swap;
+    src: url('@fontsource/manrope/files/manrope-latin-600-normal.woff2') format('woff2');
+}
+
+body {
+    font-family: font2, sans-serif;
+}
+
+[class~='font-[font1]'] {
+    font-family: font1, sans-serif;
+}
+
+[class~='font-[font2]'] {
+    font-family: font2, sans-serif;
+}
+
 .moveX{
     animation-name: moveAnimation;
     animation-duration: 10s;

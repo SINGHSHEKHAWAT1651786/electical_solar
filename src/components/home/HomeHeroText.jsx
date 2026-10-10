@@ -1,5 +1,3 @@
-import React from 'react'
-
 const HomeHeroText = () => {
     return (
         <div className='font-[font1] mt-42 lg:mt-0 pt-30 text-center'>
