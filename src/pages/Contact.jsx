@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react'
+import { ArrowUpRight } from 'lucide-react'
 import { useGSAP } from '@gsap/react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
@@ -159,7 +160,7 @@ const Contact = () => {
             // FORM HEADINGS
             // -------------------------------------------------
 
-            gsap.from('.form-heading-line', {
+            gsap.from('.contact-form-section .form-heading-line', {
                 yPercent: 100,
                 opacity: 0,
                 stagger: 0.12,
@@ -877,17 +878,11 @@ const Contact = () => {
                                 </span>
 
 
-                                <span
-                                    className="
-                                        text-xl
-                                        transition-transform
-                                        duration-500
-                                        group-hover:translate-x-2
-                                        group-hover:-translate-y-2
-                                    "
-                                >
-                                    ↗
-                                </span>
+                                <ArrowUpRight
+                                    size={18}
+                                    aria-hidden="true"
+                                    className="shrink-0 transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1"
+                                />
 
                             </div>
 
@@ -937,17 +932,11 @@ const Contact = () => {
                                 </span>
 
 
-                                <span
-                                    className="
-                                        text-xl
-                                        transition-transform
-                                        duration-500
-                                        group-hover:translate-x-2
-                                        group-hover:-translate-y-2
-                                    "
-                                >
-                                    ↗
-                                </span>
+                                <ArrowUpRight
+                                    size={18}
+                                    aria-hidden="true"
+                                    className="shrink-0 transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1"
+                                />
 
                             </div>
 
@@ -1022,18 +1011,11 @@ const Contact = () => {
                                 >
                                     Instagram
 
-                                    <span
-                                        className="
-                                            ml-1
-                                            inline-block
-                                            transition-transform
-                                            duration-300
-                                            group-hover:translate-x-1
-                                            group-hover:-translate-y-1
-                                        "
-                                    >
-                                        ↗
-                                    </span>
+                                    <ArrowUpRight
+                                        size={15}
+                                        aria-hidden="true"
+                                        className="ml-1 inline-block align-middle transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1"
+                                    />
                                 </a>
 
 
@@ -1043,18 +1025,11 @@ const Contact = () => {
                                 >
                                     LinkedIn
 
-                                    <span
-                                        className="
-                                            ml-1
-                                            inline-block
-                                            transition-transform
-                                            duration-300
-                                            group-hover:translate-x-1
-                                            group-hover:-translate-y-1
-                                        "
-                                    >
-                                        ↗
-                                    </span>
+                                    <ArrowUpRight
+                                        size={15}
+                                        aria-hidden="true"
+                                        className="ml-1 inline-block align-middle transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1"
+                                    />
                                 </a>
 
                             </div>
