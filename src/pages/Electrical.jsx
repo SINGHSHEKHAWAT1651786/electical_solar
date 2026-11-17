@@ -553,7 +553,7 @@ const Electrical = () => {
 
           <h1
             aria-label='Industrial automation and electrical systems.'
-            className='electrical-scroll-side max-w-6xl font-[font2] text-[clamp(3.6rem,10.5vw,9rem)] uppercase leading-[0.88] tracking-[-0.065em]'
+            className='electrical-scroll-side max-w-6xl font-[font2] text-[clamp(3.6rem,9.5vw,9rem)] uppercase leading-[0.88] tracking-[-0.065em]'
           >
             <span className='block'>
               <span className='electrical-hero-word block'>Industrial</span>

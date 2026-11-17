@@ -1409,7 +1409,7 @@ const Solar = () => {
     min-height: 100svh;
 
     padding:
-        24px
+        80px
         5vw
         30px;
 
@@ -2872,7 +2872,7 @@ const Solar = () => {
 
     .hero-content {
         padding:
-            18px
+            80px
             18px
             24px;
     }
