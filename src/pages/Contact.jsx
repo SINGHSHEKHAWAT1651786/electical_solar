@@ -867,9 +867,8 @@ const Contact = () => {
 
                                 <span
                                     className="
-                                        min-w-0
-                                        break-all
-                                        text-lg
+                                        whitespace-nowrap
+                                        text-[clamp(0.875rem,1.4vw,1.25rem)]
 
                                         transition-transform
                                         duration-500
@@ -1049,10 +1048,9 @@ const Contact = () => {
                     contact-form-section
                     relative
                     w-full
-                    bg-[#111]
+                    bg-[#f1f1f1]
                     px-5
                     py-24
-                    text-white
                     lg:px-10
                     lg:py-40
                 "
@@ -1129,7 +1127,7 @@ const Contact = () => {
                             className="
                                 contact-field
                                 border-t
-                                border-white/30
+                                border-[#111]/30
                             "
                         >
 
@@ -1141,7 +1139,7 @@ const Contact = () => {
                                     text-xs
                                     uppercase
                                     tracking-[0.15em]
-                                    text-white/50
+                                    text-[#111]/50
                                 "
                             >
                                 01 / Your name
@@ -1161,7 +1159,7 @@ const Contact = () => {
                                     pb-8
                                     text-2xl
                                     outline-none
-                                    placeholder:text-white/20
+                                    placeholder:text-[#111]/20
                                     sm:text-4xl
                                     lg:text-5xl
                                 "
@@ -1176,7 +1174,7 @@ const Contact = () => {
                             className="
                                 contact-field
                                 border-t
-                                border-white/30
+                                border-[#111]/30
                             "
                         >
 
@@ -1188,7 +1186,7 @@ const Contact = () => {
                                     text-xs
                                     uppercase
                                     tracking-[0.15em]
-                                    text-white/50
+                                    text-[#111]/50
                                 "
                             >
                                 02 / Your email
@@ -1208,7 +1206,7 @@ const Contact = () => {
                                     pb-8
                                     text-2xl
                                     outline-none
-                                    placeholder:text-white/20
+                                    placeholder:text-[#111]/20
                                     sm:text-4xl
                                     lg:text-5xl
                                 "
@@ -1223,7 +1221,7 @@ const Contact = () => {
                             className="
                                 contact-field
                                 border-t
-                                border-white/30
+                                border-[#111]/30
                             "
                         >
 
@@ -1235,7 +1233,7 @@ const Contact = () => {
                                     text-xs
                                     uppercase
                                     tracking-[0.15em]
-                                    text-white/50
+                                    text-[#111]/50
                                 "
                             >
                                 03 / Company
@@ -1254,7 +1252,7 @@ const Contact = () => {
                                     pb-8
                                     text-2xl
                                     outline-none
-                                    placeholder:text-white/20
+                                    placeholder:text-[#111]/20
                                     sm:text-4xl
                                     lg:text-5xl
                                 "
@@ -1269,7 +1267,7 @@ const Contact = () => {
                             className="
                                 contact-field
                                 border-y
-                                border-white/30
+                                border-[#111]/30
                             "
                         >
 
@@ -1281,7 +1279,7 @@ const Contact = () => {
                                     text-xs
                                     uppercase
                                     tracking-[0.15em]
-                                    text-white/50
+                                    text-[#111]/50
                                 "
                             >
                                 04 / Project details
@@ -1302,7 +1300,7 @@ const Contact = () => {
                                     pb-8
                                     text-2xl
                                     outline-none
-                                    placeholder:text-white/20
+                                    placeholder:text-[#111]/20
                                     sm:text-4xl
                                     lg:text-5xl
                                 "
