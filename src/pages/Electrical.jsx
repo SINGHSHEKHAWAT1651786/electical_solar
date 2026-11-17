@@ -524,7 +524,7 @@ const Electrical = () => {
 
   return (
     <main ref={pageRef} className='overflow-hidden bg-[#f3f6f7] text-[#142b40]'>
-      <section className='electrical-hero relative isolate flex min-h-[700px] h-[92svh] flex-col justify-end overflow-hidden bg-slate-950 px-5 pb-10 pt-28 text-white sm:px-8 sm:pb-12 lg:px-12 lg:pb-16'>
+      <section className='electrical-hero relative isolate flex min-h-[max(700px,92svh)] flex-col justify-end overflow-hidden bg-slate-950 px-5 pb-10 pt-28 text-white sm:px-8 sm:pb-12 lg:px-12 lg:pb-16'>
         <img
           src={automationImage}
           alt='Technician inspecting industrial automation control cabinets'
