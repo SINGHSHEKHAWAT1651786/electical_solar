@@ -4114,6 +4114,21 @@ const Solar = () => {
                             Let's build your energy system.
                         </p>
 
+                        <div className="mt-4 flex flex-col gap-2 text-sm text-white/70 sm:flex-row sm:gap-5">
+                            <a
+                                href="tel:+917737216028"
+                                className="transition-colors hover:text-sky-300 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-sky-300"
+                            >
+                                +91 77372 16028
+                            </a>
+                            <a
+                                href="mailto:innovexautomations@gmail.com"
+                                className="break-all transition-colors hover:text-sky-300 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-sky-300"
+                            >
+                                innovexautomations@gmail.com
+                            </a>
+                        </div>
+
                     </div>
 
 

@@ -1,7 +1,8 @@
 import { useState } from 'react'
-import { ArrowUpRight, Mail, Send } from 'lucide-react'
+import { ArrowUpRight, Mail, Phone, Send } from 'lucide-react'
+import { Link } from 'react-router-dom'
 
-const HomeInquiryForm = () => {
+const HomeInquiryForm = ({ contactOnly = false }) => {
   const [draftHref, setDraftHref] = useState('')
 
   const handleSubmit = (event) => {
@@ -25,7 +26,7 @@ const HomeInquiryForm = () => {
     ].join('\n')
 
     setDraftHref(
-      `mailto:info@innovexautomation.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`
+      `mailto:innovexautomations@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`
     )
   }
 
@@ -42,23 +43,71 @@ const HomeInquiryForm = () => {
           </p>
           <h2
             id='home-enquiry-title'
-            className='max-w-lg font-[font1] text-3xl uppercase leading-[0.96] sm:text-4xl lg:text-5xl'
+            className={contactOnly
+              ? 'max-w-lg font-[font2] text-[clamp(3rem,8vw,7.5rem)] uppercase leading-[0.9] tracking-[-0.06em]'
+              : 'max-w-lg font-[font1] text-3xl uppercase leading-[0.96] sm:text-4xl lg:text-5xl'}
           >
-            Tell us what you need to power.
+            {contactOnly ? (
+              <>
+                <span className='block'>
+                  <span className='electrical-contact-word block'>Power your</span>
+                </span>
+                <span className='block'>
+                  <span className='electrical-contact-word block w-fit bg-black px-2 text-white'>NEXT MOVE.</span>
+                </span>
+              </>
+            ) : (
+              'Tell us what you need to power.'
+            )}
           </h2>
           <p className='mt-5 max-w-md text-sm leading-relaxed text-black/65 sm:text-base'>
-            Share a few details and we will prepare an email to the Innovex team.
+            {contactOnly
+              ? 'Tell us about your automation or electrical project. Our team can help shape the right solution for your operation.'
+              : 'Share your project details to prepare an email for our team. Once you send it, we will follow up. Prefer direct contact? Call or email us.'}
           </p>
-          <a
-            href='mailto:info@innovexautomation.com'
-            className='mt-7 inline-flex items-center gap-2 text-sm transition-colors hover:text-sky-800 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-sky-800'
-          >
-            <Mail size={16} aria-hidden='true' />
-            info@innovexautomation.com
-            <ArrowUpRight size={15} aria-hidden='true' />
-          </a>
+          <div className='mt-7 flex flex-wrap items-center gap-x-6 gap-y-3'>
+            <a
+              href='mailto:innovexautomations@gmail.com'
+              className='inline-flex items-center gap-2 break-all text-sm transition-colors hover:text-sky-800 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-sky-800'
+            >
+              <Mail size={16} aria-hidden='true' />
+              innovexautomations@gmail.com
+              <ArrowUpRight size={15} aria-hidden='true' />
+            </a>
+            <a
+              href='tel:+917737216028'
+              className='inline-flex items-center gap-2 text-sm transition-colors hover:text-sky-800 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-sky-800'
+            >
+              <Phone size={16} aria-hidden='true' />
+              +91 77372 16028
+              <ArrowUpRight size={15} aria-hidden='true' />
+            </a>
+          </div>
         </div>
 
+        {contactOnly ? (
+          <div className='electrical-contact-panel flex min-h-[280px] flex-col justify-between gap-10 bg-black p-6 text-white sm:p-8'>
+            <div>
+              <p className='text-[10px] uppercase tracking-[0.16em] text-sky-300'>
+                Automation · Electrical · Power
+              </p>
+              <h3 className='electrical-contact-panel-heading mt-5 max-w-md font-[font2] text-[clamp(2.5rem,5vw,5rem)] uppercase leading-[0.9] tracking-[-0.06em]'>
+                <span className='block'>
+                  <span className='electrical-contact-panel-word block'>One system.</span>
+                </span>
+                <span className='mt-2 block text-sky-300'>
+                  <span className='electrical-contact-panel-word block'>Built for your work.</span>
+                </span>
+              </h3>
+            </div>
+            <Link
+              to='/contact'
+              className='inline-flex min-h-12 w-fit items-center gap-3 bg-sky-300 px-5 text-xs uppercase tracking-[0.12em] text-slate-950 transition-colors hover:bg-white focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white'
+            >
+              Contact us <ArrowUpRight size={16} aria-hidden='true' />
+            </Link>
+          </div>
+        ) : (
         <form onSubmit={handleSubmit} className='grid gap-x-6 gap-y-6 sm:grid-cols-2'>
           <label className='grid gap-2 text-[10px] uppercase tracking-[0.14em] text-black/65'>
             Your name
@@ -143,6 +192,7 @@ const HomeInquiryForm = () => {
             </p>
           )}
         </form>
+        )}
       </div>
     </section>
   )

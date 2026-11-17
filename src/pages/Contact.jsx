@@ -826,7 +826,7 @@ const Contact = () => {
                         {/* EMAIL */}
 
                         <a
-                            href="mailto:info@innovexautomation.com"
+                            href="mailto:innovexautomations@gmail.com"
                             className="
                                 contact-info-item
                                 group
@@ -866,13 +866,14 @@ const Contact = () => {
                                 <span
                                     className="
                                         text-lg
+
                                         transition-transform
                                         duration-500
                                         group-hover:translate-x-2
                                         lg:text-xl
                                     "
                                 >
-                                    info@innovexautomation.com
+                                    innovexautomations@gmail.com
                                 </span>
 
 
@@ -896,7 +897,7 @@ const Contact = () => {
                         {/* PHONE */}
 
                         <a
-                            href="tel:+919999999999"
+                            href="tel:+917737216028"
                             className="
                                 contact-info-item
                                 group
@@ -932,7 +933,7 @@ const Contact = () => {
                             >
 
                                 <span className="text-lg lg:text-xl">
-                                    +91 99999 99999
+                                    +91 77372 16028
                                 </span>
 
 

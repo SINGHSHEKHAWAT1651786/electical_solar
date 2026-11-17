@@ -5,13 +5,15 @@ import { useLayoutEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { Link } from 'react-router-dom'
 
-import image1 from '../assets/optimized/image1.jpg'
-import image2 from '../assets/optimized/image2.jpg'
-import image3 from '../assets/optimized/image3.jpg'
-import image4 from '../assets/optimized/image4.jpg'
-import image5 from '../assets/optimized/image5.jpg'
-import image6 from '../assets/optimized/image6.jpg'
-import image7 from '../assets/optimized/image7.jpg'
+import automationServiceImage from '../assets/project1/gettyimages7.jpg'
+import electricalServiceImage from '../assets/optimized/image4.jpg'
+import image1 from '../assets/project1/gettyimages1.jpg'
+import image2 from '../assets/project1/gettyimages2.jpg'
+import image3 from '../assets/project1/gettyimages3.jpg'
+import image4 from '../assets/project1/gettyimages4.jpg'
+import image5 from '../assets/project1/gettyimages5.jpg'
+import image6 from '../assets/project1/gettyimages6.jpg'
+import image7 from '../assets/project1/gettyimages7.jpg'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -106,7 +108,7 @@ const About = () => {
       description:
         'Control architecture, PLC systems and intelligent production lines engineered for dependable output.',
       metadata: 'PLC / SCADA / ROBOTICS',
-      image: image1,
+      image: automationServiceImage,
       tone: 'bg-sky-300 text-black',
     },
     {
@@ -116,7 +118,7 @@ const About = () => {
       description:
         'Power distribution and industrial electrical systems designed to make every connection count.',
       metadata: 'POWER / CONTROL / SAFETY',
-      image: image4,
+      image: electricalServiceImage,
       tone: 'bg-[#e9e9e6] text-black',
     },
     {
@@ -1497,9 +1499,6 @@ const About = () => {
             ? 'inset(0 100% 0 0)'
             : 'inset(0 0 0 100%)',
 
-        x: (index) =>
-          index % 2 === 0 ? -140 : 140,
-
         skewX: (index) =>
           index % 2 === 0 ? -8 : 8,
 
@@ -1508,7 +1507,6 @@ const About = () => {
       },
       {
         clipPath: 'inset(0 0% 0 0%)',
-        x: 0,
         skewX: 0,
         scaleX: 1,
         opacity: 1,
@@ -2005,7 +2003,7 @@ const About = () => {
         ref={page1Ref}
         className="
           relative
-          min-h-[175vh]
+          min-h-[calc(72vh+780px)]
           bg-white
           font-[font2]
 
@@ -2100,7 +2098,7 @@ const About = () => {
           <div
             className="
               mb-4
-              text-[8px]
+              text-[10px]
               uppercase
               tracking-[0.2em]
 
@@ -2112,7 +2110,7 @@ const About = () => {
 
           <h1
             className="
-              text-[18vw]
+              text-[clamp(3.5rem,13vw,10rem)]
               uppercase
               leading-[0.76]
               tracking-[-0.08em]
@@ -2120,19 +2118,10 @@ const About = () => {
               lg:text-[10vw]
             "
           >
-            INNOVEX
-            <br />
-
-            <span className="ml-[6vw]">
-              AUTO
+            <span className="block">INNOVEX</span>
+            <span className="ml-[6vw] block whitespace-nowrap">
+              AUTOMATION
             </span>
-
-            <br />
-
-            <span className="ml-[12vw]">
-              MATION
-            </span>
-
           </h1>
 
         </div>
@@ -2157,7 +2146,7 @@ const About = () => {
           <div
             className="
               relative
-              min-h-[64vh]
+              min-h-[700px]
               overflow-hidden
               bg-[#e9e9e6]
               px-5
@@ -2190,7 +2179,7 @@ const About = () => {
               <span
                 className="
                   about-meta-item
-                  text-[8px]
+                  text-[10px]
                   uppercase
                   tracking-[0.2em]
 
@@ -2204,7 +2193,7 @@ const About = () => {
                 className="
                   about-meta-item
                   text-right
-                  text-[8px]
+                  text-[10px]
                   uppercase
                   leading-relaxed
                   tracking-[0.15em]
@@ -2325,14 +2314,14 @@ const About = () => {
                     absolute
                     bottom-3
                     left-3
-                    text-[7px]
+                    text-[10px]
                     uppercase
                     tracking-[0.18em]
                     text-white/80
 
                     lg:bottom-4
                     lg:left-4
-                    lg:text-[9px]
+                    lg:text-[10px]
                   "
                 >
                   03 / 07
@@ -2360,12 +2349,12 @@ const About = () => {
                 <div
                   className="
                     mb-3
-                    text-[7px]
+                    text-[10px]
                     uppercase
                     tracking-[0.2em]
-                    text-black/40
+                    text-black/65
 
-                    lg:text-[10px]
+                    lg:text-xs
                   "
                 >
                   Who we are
@@ -2419,7 +2408,7 @@ const About = () => {
                 <p
                   className="
                     text-[4.6vw]
-                    leading-[1.03]
+                    leading-[1.2]
                     tracking-[-0.025em]
 
                     lg:text-[1.45vw]
@@ -2443,13 +2432,14 @@ const About = () => {
                     border-t
                     border-black/20
                     pt-3
-                    text-[7px]
+                    text-[11px]
                     uppercase
-                    tracking-[0.16em]
-                    text-black/45
+                    leading-relaxed
+                    tracking-[0.1em]
+                    text-black/70
 
                     lg:mt-8
-                    lg:text-[10px]
+                    lg:text-xs
                   "
                 >
 
@@ -2488,7 +2478,7 @@ const About = () => {
                   border-t
                   border-black/20
                   pt-3
-                  text-[7px]
+                  text-[10px]
                   uppercase
                   tracking-[0.17em]
                   text-black/45
@@ -2531,7 +2521,7 @@ const About = () => {
               mb-2
               flex
               justify-between
-              text-[8px]
+              text-[10px]
               uppercase
               tracking-[0.2em]
             "
@@ -2610,7 +2600,7 @@ const About = () => {
                   mb-8
                   flex
                   justify-between
-                  text-[8px]
+                  text-[10px]
                   uppercase
                   tracking-[0.2em]
 
@@ -2772,11 +2762,11 @@ const About = () => {
                     experience-stat-label
                     mt-7
                     max-w-[150px]
-                    text-[9px]
+                    text-[10px]
                     uppercase
                     leading-relaxed
                     tracking-[0.14em]
-                    text-black/50
+                    text-black/65
 
                     lg:text-sm
                   "
@@ -2824,10 +2814,10 @@ const About = () => {
           <div
             ref={philosophyLabelRef}
             className="
-              text-[9px]
+              text-[10px]
               uppercase
               tracking-[0.2em]
-              text-white/40
+              text-white/70
 
               lg:text-xs
             "
@@ -2930,7 +2920,7 @@ const About = () => {
                 col-span-full
                 flex
                 justify-between
-                text-[8px]
+                text-[10px]
                 uppercase
                 tracking-[0.2em]
 
@@ -2953,19 +2943,18 @@ const About = () => {
               className="
                 text-[17vw]
                 uppercase
-                leading-[0.75]
+                leading-[0.95]
                 tracking-[-0.08em]
 
                 lg:text-[9vw]
               "
             >
-              IDEAS
-              <br />
-              INTO
-              <br />
-
+              <span className="block">IDEAS</span>
+              <span className="block">INTO</span>
               <span
                 className="
+                  block
+                  w-fit
                   bg-black
                   px-2
                   text-white
@@ -2980,15 +2969,14 @@ const About = () => {
               className="
                 max-w-[400px]
                 self-end
-                text-[9px]
-                uppercase
+                text-sm
                 leading-relaxed
-                tracking-[0.15em]
-                text-black/50
+                tracking-normal
+                text-black/70
 
                 lg:mb-2
                 lg:pr-8
-                lg:text-sm
+                sm:text-base
               "
             >
               One engineering workflow from
@@ -3055,7 +3043,7 @@ const About = () => {
                     border-t
                     border-current/30
                     pt-3
-                    text-[8px]
+                    text-[10px]
                     uppercase
                     tracking-[0.18em]
 
@@ -3146,7 +3134,7 @@ const About = () => {
                     border-t
                     border-current/30
                     pt-3
-                    text-[9px]
+                    text-[10px]
                     uppercase
                     tracking-[0.16em]
                     opacity-60
@@ -3182,7 +3170,7 @@ const About = () => {
                     border-b
                     border-current
                     pb-2
-                    text-[9px]
+                    text-[10px]
                     uppercase
                     tracking-[0.18em]
 
@@ -3226,19 +3214,20 @@ const About = () => {
                 text-center
                 text-[12vw]
                 uppercase
-                leading-[0.8]
+                leading-[0.95]
                 tracking-[-0.08em]
 
                 lg:text-[6vw]
               "
             >
-              ONE
-              <br />
-              TEAM.
-              <br />
+              <span className="block">ONE</span>
+              <span className="block">TEAM.</span>
 
               <span
                 className="
+                  mx-auto
+                  block
+                  w-fit
                   bg-black
                   px-2
                   text-white
@@ -3247,9 +3236,7 @@ const About = () => {
                 ONE
               </span>
 
-              <br />
-
-              SYSTEM.
+              <span className="block">SYSTEM.</span>
             </div>
 
           </div>
@@ -3289,7 +3276,7 @@ const About = () => {
               border-t
               border-black
               pt-5
-              text-[8px]
+              text-[10px]
               uppercase
               tracking-[0.2em]
 
@@ -3374,7 +3361,7 @@ const About = () => {
                   z-10
                   w-[38%]
                   px-5
-                  text-[8px]
+                  text-[10px]
                   uppercase
                   tracking-[0.08em]
                   transition-colors
@@ -3427,9 +3414,10 @@ const About = () => {
           relative
           z-30
           flex
+          flex-wrap
           items-center
-          justify-end
-          gap-2
+          justify-between
+          gap-3
           bg-white
           px-2
           pb-8
@@ -3459,6 +3447,21 @@ const About = () => {
           © {new Date().getFullYear()}
           {' '}
           Innovex Automation
+        </div>
+
+        <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-xs sm:text-sm">
+          <a
+            href="tel:+917737216028"
+            className="transition-colors hover:text-sky-800 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-sky-800"
+          >
+            +91 77372 16028
+          </a>
+          <a
+            href="mailto:innovexautomations@gmail.com"
+            className="break-all transition-colors hover:text-sky-800 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-sky-800"
+          >
+            innovexautomations@gmail.com
+          </a>
         </div>
 
         <Link

@@ -4,10 +4,10 @@ import { useContext, useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { NavbarContext } from '../../context/navbarContext'
 import heroImage from '../../assets/hero.png'
-import marqueeImageOne from '../../assets/optimized/image1.jpg'
-import marqueeImageTwo from '../../assets/optimized/image2.jpg'
-import marqueeImageThree from '../../assets/optimized/image4.jpg'
-import marqueeImageFour from '../../assets/optimized/image7.jpg'
+import marqueeImageOne from '../../assets/project1/gettyimages1.jpg'
+import marqueeImageTwo from '../../assets/project1/gettyimages2.jpg'
+import marqueeImageThree from '../../assets/project1/gettyimages4.jpg'
+import marqueeImageFour from '../../assets/project1/gettyimages7.jpg'
 
 
 // =============================================================
@@ -249,6 +249,20 @@ const FullScreenNav = () => {
         document.addEventListener('keydown', closeOnEscape)
         return () => document.removeEventListener('keydown', closeOnEscape)
     }, [navOpen, setNavOpen])
+
+    useEffect(() => {
+        if (!navOpen) return undefined
+
+        const previousHtmlOverflow = document.documentElement.style.overflow
+        const previousBodyOverflow = document.body.style.overflow
+        document.documentElement.style.overflow = 'hidden'
+        document.body.style.overflow = 'hidden'
+
+        return () => {
+            document.documentElement.style.overflow = previousHtmlOverflow
+            document.body.style.overflow = previousBodyOverflow
+        }
+    }, [navOpen])
 
 
     // =========================================================
@@ -581,11 +595,9 @@ const FullScreenNav = () => {
                 className="
                     fullscreennav
                     hidden
-                    absolute
-                    left-0
-                    top-0
+                    fixed
+                    inset-0
                     z-50
-                    h-screen
                     w-full
                     overflow-hidden
                     text-white
@@ -602,7 +614,7 @@ const FullScreenNav = () => {
                         fixed
                         inset-0
                         z-0
-                        h-screen
+                        h-dvh
                         w-full
                     "
                 >
@@ -679,7 +691,7 @@ const FullScreenNav = () => {
                         fullscreen-scroll
                         relative
                         z-10
-                        h-screen
+                        h-full
                         w-full
                         overflow-x-hidden
                         overflow-y-auto
@@ -810,34 +822,12 @@ const FullScreenNav = () => {
                         "
                     >
 
-                        {/* PROJECTS */}
-
-                        <MenuRow
-                            title="Electrical"
-                            to="/electrical"
-                        />
-
-                        <MenuRow
-                            title="Projects"
-                            to="/projects"
-                        />
-
-
                         {/* ABOUT */}
 
                         <MenuRow
                             title="About"
                             to="/about"
                         />
-
-
-                        {/* CONTACT */}
-
-                        <MenuRow
-                            title="Contact"
-                            to="/contact"
-                        />
-
 
                         {/* SOLAR */}
 
@@ -846,6 +836,28 @@ const FullScreenNav = () => {
                             to="/solar"
                             border="border-y"
                         />
+
+                        {/* ELECTRICAL */}
+
+                        <MenuRow
+                            title="Electrical"
+                            to="/electrical"
+                        />
+
+                        {/* PROJECTS */}
+
+                        <MenuRow
+                            title="Projects"
+                            to="/projects"
+                        />
+
+                        {/* CONTACT */}
+
+                        <MenuRow
+                            title="Contact"
+                            to="/contact"
+                        />
+
 
                     </div>
 

@@ -5,10 +5,10 @@ import { useRef, useState } from 'react'
 import { MoveDown } from 'lucide-react'
 
 import ProjectCard from '../components/projects/ProjectCard'
-import automationImage from '../assets/optimized/image1.jpg'
+import automationImage from '../assets/project1/gettyimages7.jpg'
 import electricalImage from '../assets/optimized/image4.jpg'
-import solarImage from '../assets/optimized/image5.jpg'
-import supportImage from '../assets/optimized/image6.jpg'
+import solarImage from '../assets/project1/gettyimages5.jpg'
+import supportImage from '../assets/project1/gettyimages6.jpg'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -27,14 +27,12 @@ const Projects = () => {
           image: automationImage,
           title: 'Factory Automation',
           type: 'Industrial Automation',
-          year: 'SAMPLE',
           href: '/contact',
         },
         {
           image: electricalImage,
           title: 'Electrical Distribution',
           type: 'Electrical Solutions',
-          year: 'SAMPLE',
           href: '/contact',
         },
       ],
@@ -45,14 +43,12 @@ const Projects = () => {
           image: solarImage,
           title: 'Rooftop Solar System',
           type: 'Solar Energy',
-          year: 'SAMPLE',
           href: '/contact',
         },
         {
           image: supportImage,
           title: 'Control Panel Upgrade',
           type: 'Electrical & Commissioning',
-          year: 'SAMPLE',
           href: '/contact',
         },
       ],
@@ -350,7 +346,7 @@ const Projects = () => {
 
       {activeProject && (
         <div className="fixed left-0 top-[72px] z-30 w-full bg-white text-black pointer-events-none md:top-[84px]">
-          <div className="grid grid-cols-[1fr_auto_auto] items-center gap-4 border-y border-black px-3 py-2 md:px-5 md:py-3">
+          <div className="grid grid-cols-[1fr_auto] items-center gap-4 border-y border-black px-3 py-2 md:px-5 md:py-3">
             <span className="font-[font1] text-xl uppercase md:text-4xl">
               {activeProject.title}
             </span>
@@ -359,9 +355,6 @@ const Projects = () => {
               {activeProject.type}
             </span>
 
-            <span className="font-[font1] text-xl md:text-4xl">
-              {activeProject.year}
-            </span>
           </div>
         </div>
       )}
@@ -569,11 +562,13 @@ const Projects = () => {
               </p>
 
               <a
-                href="mailto:info@innovexautomation.com"
+                href="mailto:innovexautomations@gmail.com"
                 className="
                   inline-block
                   font-[font1]
-                  text-xl
+                  break-all
+                  text-base
+                  sm:text-xl
                   md:text-3xl
                   lg:text-4xl
                   break-all
@@ -584,7 +579,7 @@ const Projects = () => {
                   group-hover:translate-x-2
                 "
               >
-                info@innovexautomation.com
+                innovexautomations@gmail.com
               </a>
             </div>
 
@@ -594,7 +589,7 @@ const Projects = () => {
               </p>
 
               <a
-                href="tel:+919XXXXXXXXX"
+                href="tel:+917737216028"
                 className="
                   inline-block
                   font-[font1]
@@ -608,7 +603,7 @@ const Projects = () => {
                   group-hover:translate-x-2
                 "
               >
-                +91 XXXXX XXXXX
+                +91 77372 16028
               </a>
             </div>
 

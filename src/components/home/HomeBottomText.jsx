@@ -221,7 +221,7 @@ const HomeBottomText = () => {
 
           {/* WhatsApp */}
           <a
-            href='https://wa.me/918949656484'
+            href='https://wa.me/917737216028'
             target='_blank'
             rel='noopener noreferrer'
             title='WhatsApp'

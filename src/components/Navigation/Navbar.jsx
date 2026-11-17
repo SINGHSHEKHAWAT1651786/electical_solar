@@ -24,10 +24,10 @@ const Navbar = () => {
 
             <div className='ml-auto mr-4 hidden items-center gap-6 md:flex lg:mr-8 lg:gap-8'>
                 {[
-                    ['Electrical', '/electrical'],
-                    ['Projects', '/projects'],
                     ['About', '/about'],
                     ['Solar', '/solar'],
+                    ['Electrical', '/electrical'],
+                    ['Projects', '/projects'],
                     ['Contact', '/contact'],
                 ].map(([label, to]) => (
                     <NavLink

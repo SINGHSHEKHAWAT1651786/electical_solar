@@ -52,7 +52,7 @@ const ProjectCard = ({ projects, onProjectHover }) => {
                 ? { to: project.href }
                 : { href: project.href, target: '_blank', rel: 'noreferrer' })}
               className='group relative block h-1/2 w-full overflow-hidden transition-transform duration-300 hover:scale-[0.99] focus-visible:outline-2 focus-visible:outline-offset-[-4px] focus-visible:outline-[#00aeea] md:h-full md:w-1/2'
-              aria-label={`View ${project.title} sample: ${project.type}`}
+              aria-label={`View ${project.title}: ${project.type}`}
               onMouseEnter={() => onProjectHover(project)}
               onMouseLeave={() => onProjectHover(null)}
               onFocus={() => onProjectHover(project)}
@@ -68,8 +68,6 @@ const ProjectCard = ({ projects, onProjectHover }) => {
 
               <span className='absolute bottom-4 left-4 flex items-center gap-2 bg-black/70 px-3 py-2 text-[10px] uppercase tracking-[0.12em] text-white backdrop-blur-sm'>
                 <span>{project.type}</span>
-                <span className='text-[#00aeea]'>/</span>
-                <span>{project.year}</span>
               </span>
             </CardLink>
           )
