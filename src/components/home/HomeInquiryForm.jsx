@@ -63,7 +63,7 @@ const HomeInquiryForm = ({ contactOnly = false }) => {
           <p className='mt-5 max-w-md text-sm leading-relaxed text-black/65 sm:text-base'>
             {contactOnly
               ? 'Tell us about your automation or electrical project. Our team can help shape the right solution for your operation.'
-              : 'Share your project details to prepare an email for our team. Once you send it, we will follow up. Prefer direct contact? Call or email us.'}
+              : 'Tell us about your project and the solution your operation needs. Prefer direct contact? Call or email us.'}
           </p>
           <div className='mt-7 flex flex-wrap items-center gap-x-6 gap-y-3'>
             <a
@@ -174,7 +174,7 @@ const HomeInquiryForm = ({ contactOnly = false }) => {
               type='submit'
               className='inline-flex min-h-12 items-center gap-3 bg-[#00aeea] px-5 text-xs uppercase tracking-[0.12em] text-black transition-colors hover:bg-black hover:text-white focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-black'
             >
-              Prepare email <Send size={15} aria-hidden='true' />
+              Contact us <Send size={15} aria-hidden='true' />
             </button>
             {draftHref && (
               <a
