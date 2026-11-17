@@ -830,6 +830,7 @@ const Contact = () => {
                             href="mailto:innovexautomations@gmail.com"
                             className="
                                 contact-info-item
+                                min-w-0
                                 group
                                 border-b
                                 border-white/20
@@ -858,14 +859,16 @@ const Contact = () => {
                             <div
                                 className="
                                     flex
+                                    min-w-0
                                     items-center
-                                    justify-between
-                                    gap-4
+                                    gap-2
                                 "
                             >
 
                                 <span
                                     className="
+                                        min-w-0
+                                        break-all
                                         text-lg
 
                                         transition-transform
@@ -881,7 +884,7 @@ const Contact = () => {
                                 <ArrowUpRight
                                     size={18}
                                     aria-hidden="true"
-                                    className="shrink-0 transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1"
+                                    className="shrink-0 -translate-x-1 transition-transform duration-300 group-hover:-translate-x-1 group-hover:-translate-y-1"
                                 />
 
                             </div>
@@ -923,7 +926,7 @@ const Contact = () => {
                                 className="
                                     flex
                                     items-center
-                                    justify-between
+                                    gap-2
                                 "
                             >
 
@@ -935,7 +938,7 @@ const Contact = () => {
                                 <ArrowUpRight
                                     size={18}
                                     aria-hidden="true"
-                                    className="shrink-0 transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1"
+                                    className="shrink-0 -translate-x-1 transition-transform duration-300 group-hover:-translate-x-1 group-hover:-translate-y-1"
                                 />
 
                             </div>
